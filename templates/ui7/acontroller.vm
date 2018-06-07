@@ -1,0 +1,96 @@
+/**
+ * @author : Shalinda Ranasinghe
+ * @copyright: 2018
+ */
+
+ const ${className} = require("../models/${objectName}");
+
+/**
+ * @desc - module for get all ${objectName}.
+ */
+module.exports.get${className}s = (req, res) => {
+  const query = ${className}.find({});
+  
+  query
+    #foreach ($col in $fkcols).populate("$col.varName")
+#end  
+    .lean()
+    .exec()
+    .then(${objectName}s => res.status(200)
+      .json(${objectName}s))
+    .catch(err => res.status(500)
+      .json({error: true, message: err.message}))
+}
+
+/**
+ * @desc - module for get single ${objectName} by _id.
+ */
+module.exports.get${className}ById = (req, res) => {
+  const _id = req.params.${objectName}Id;
+  
+  if (!_Id)
+    return res.status(400)
+      .json({ error: true, message: "${className} Id Required" })
+
+  ${className}.findById(_id)
+    .lean()
+    .exec()
+    .then(${objectName} => res.status(200)
+      .json(${objectName}))
+    .catch(err => res.status(500)
+      .json({ error: true, message: err.message }))
+}
+
+/**
+ * @desc - module for save ${objectName}
+ */
+module.exports.create = (req, res) => {
+  const ${objectName} = new ${className}(req.body);
+
+  ${objectName}.save((err, ${objectName}) => {
+    if (err)
+      return res.status(500)
+        .json({ error: true, message: err.message })
+
+    return res.status(201)
+      .json(${objectName})
+  })
+}
+
+/**
+ * @desc - module for save ${objectName}
+ */
+module.exports.update1 = (req, res) => {
+  const ${objectName} = req.body;
+  const _id = ${objectName}._id;
+
+  const query = { _id },
+    update = { $set: ${objectName} },
+    options = { new: true };
+
+  ${className}.findByIdAndUpdate(query, update, options)
+    .lean()
+    .exec()
+    .then(${objectName} => res.status(200)
+      .json(${objectName}))
+    .catch(err => res.status(500)
+      .json({ error: true, message: err.message }))
+}
+
+/**
+ * @desc - module for delete ${objectName}
+ */
+module.exports.delete = (req, res) => {
+  const _id = req.params.${objectName}Id;
+
+  ${className}.findByIdAndRemove(_id)
+    .lean()
+    .exec()
+    .then(${objectName} => res.status(200)
+      .json(${objectName}))
+    .catch(err => res.status(500)
+      .json({ error: true, message: err.message }))
+}
+
+
+

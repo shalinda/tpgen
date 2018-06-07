@@ -1,0 +1,120 @@
+<project name="sxgen" default="compile" basedir=".">
+	<description>
+        Template Code Generator
+    </description>
+
+	<!-- set global properties for this build -->
+	<property name="build" location="build" />
+	<property name="dist" location="dist" />
+	<property name="gen" location="gen" />
+	<property name="lib.dir" location="lib" />
+	<property name="meta" location="meta" />
+	<property name="src" location="src" />
+
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build}" />
+	</target>
+
+	<target name="compile" depends="init" description="compile the source ">
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}" debug="yes">
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+		<copy todir="${build}">
+			<fileset dir="${src}" id="src.files">
+				<include name="**/*.properties" />
+                <include name="**/*.xml" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="declare" depends="compile">
+		<taskdef name="sxgen" classname="com.tpgen.gen.SxGen" classpath="build">
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</taskdef>
+	</target>
+
+	<target name="dist" depends="compile" description="generate the distribution">
+		<!-- Create the distribution directory -->
+		<mkdir dir="${dist}/lib" />
+
+		<!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+		<jar jarfile="${dist}/lib/MyProject-${DSTAMP}.jar" basedir="${build}" />
+	</target>
+
+	<target name="clean" description="clean up">
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+		<delete dir="${gen}" />
+	</target>
+
+
+	<target name="gen2" description="Create new module from the database." depends="compile">
+		<java classname="SxGen">
+			<classpath>
+				<pathelement location="${build}" />
+				<fileset dir="${lib.dir}">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="ui7" description="Create new module from the database for UI7" depends="compile">
+		<java classname="com.tpgen.gen.UI7">
+			<classpath>
+				<pathelement location="${build}" />
+				<fileset dir="${lib.dir}">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
+    <target name="chk" description="Check database connections">
+		<java classname="com.tpgen.common.ConnectionCheck">
+			<classpath>
+				<pathelement location="${build}" />
+				<fileset dir="${lib.dir}">
+					<include name="**/*.jar" />
+                    <exclude name="**/*classes12.jar"/>
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
+    <target name="chkx" description="Check database connections">
+		<java classname="com.tpgen.common.ConnectionCheck">
+			<classpath>
+				<pathelement location="${build}" />
+				<fileset dir="${lib.dir}">
+					<include name="**/*.jar" />
+                    <exclude name="**/*ojdbc14.jar"/>
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="test-gen" description="Test generated classes">
+		<javac srcdir="${gen}" destdir="${build}" debug="on">
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+</project>
