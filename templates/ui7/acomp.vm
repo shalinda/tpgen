@@ -1,0 +1,26 @@
+import { Component, OnInit, Input} from '@angular/core';
+import { ${className} } from '../../../model/${objectName}';
+import { Router } from '@angular/router';
+import { ${className}Service }  from '../../../service/${objectName}.service';
+
+@Component({
+    templateUrl: '${objectName}s.component.html'
+})
+
+export class ${className}sComponent implements OnInit {
+  @Input() ${objectName}: ${className}
+  ${objectName}s: ${className}[]
+  selected${className}: ${className}
+
+  constructor(private router: Router,private ${objectName}Service: ${className}Service) { }
+
+  ngOnInit() {
+    this.selected${className} = new ${className}      
+    this.${objectName}Service.get${className}s().subscribe(${objectName}s=> this.${objectName}s = ${objectName}s)
+  }
+
+  onClick(${objectName}: ${className}) {
+    this.selected${className} = ${objectName}    
+  }
+
+}

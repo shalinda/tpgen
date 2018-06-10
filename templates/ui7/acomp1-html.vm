@@ -1,0 +1,40 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    <strong>${className}</strong>
+                </div>
+                <div class="card-body">                    
+                    <form name="form" #f="ngForm" (ngSubmit)="f.form.valid && onSubmit()" novalidate>
+#foreach ($col in $cols) 
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="${col.varName}">${col.title}</label>
+                                <input [(ngModel)]="${objectName}.${col.varName}" type="text" id="${col.varName}" name="${col.varName}" #name="ngModel" class="form-control" placeholder="${className} ${col.title}"
+                                required/>
+                                <!-- #name="ngModel" -->
+                            </div>
+                        </div>
+                    </div>                        
+
+#end
+                        <div class="row">
+                            <div class="col-sm-4">                                
+                                <button type="submit" class="btn btn-block btn-primary">Save</button>
+                            </div>
+                            <div class="col-sm-4">                                
+                                <button type="button" class="btn btn-block btn-primary" (click)="delete()">Delete</button>
+                            </div>
+                            <div class="col-sm-4">
+                                <button type="button" class="btn btn-block btn-primary" (click)="clear()">New</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+</div>

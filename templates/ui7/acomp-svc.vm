@@ -1,0 +1,45 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
+import { Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
+
+import { ${className} } from '../model/${objectName}';
+
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json'})
+};
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ${className}Service {
+
+  private url = 'http://192.168.1.89:8000/api/v1/${objectName}s';  // URL to web api
+
+  constructor(private http: HttpClient) { }
+
+    add${className} (${objectName}: ${className}): Observable<${className}> {      
+      return this.http.post<${className}>(this.url, ${objectName}, httpOptions)      
+    }
+
+    update${className} (${objectName}: ${className}): Observable<${className}> {      
+      return this.http.put<${className}>(this.url, ${objectName}, httpOptions)      
+    }
+
+    delete${className}(${objectName}: ${className}) {
+      //if (${objectName}._id == null) return ${objectName};
+      const url = `${this.url}/${${objectName}._id}`;
+      return this.http.delete(url)      
+    }
+
+     /** GET hero by id. Will 404 if id not found */
+    get${className}(name: String): Observable<${className}> {
+      const url = `${this.url}/${name}`;
+      return this.http.get<${className}>(url)
+    }
+
+    get${className}s(): Observable<${className}[]> {      
+      return this.http.get<${className}[]>(this.url)
+    }
+}

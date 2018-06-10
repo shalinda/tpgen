@@ -272,6 +272,7 @@ public class UI7 {
                     col.setJavaType(toJavaType(colType));
                     col.setMongoType(toMongoType(colType));
                     col.setSample("Integer".equals(col.getJavaType()) ? "11111111111" : "abc");
+                    col.setTitle(toModuleTitle(colName, "_"));
                     //col.setLength(meta.getPrecision(i));
                     varName = toJavaName(colName, "_", true);
                     methodName = toJavaName(colName, "_", false);
@@ -368,7 +369,7 @@ public class UI7 {
         StringTokenizer st = new StringTokenizer(colName, separator, false);
         while (st.hasMoreElements()) {
             String element = (String) st.nextElement();
-            element += StringUtils.lowerCase(element);
+            //element += StringUtils.lowerCase(element);
             newName += StringUtils.capitalize(element);
             if(st.hasMoreElements()) {
                 newName += " ";

@@ -1,0 +1,64 @@
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ${className} } from '../../../model/${objectName}';
+import { ${className}Service } from '../../../service/${objectName}.service';
+import { ActivatedRoute, Router } from "@angular/router";
+import { Location } from '@angular/common';
+// import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-${objectName}',
+  // templateUrl: './${objectName}-detail.component.html',
+  // styleUrls: ['./${objectName}-detail.component.css']
+  templateUrl: './${objectName}.component.html'
+})
+
+export class ${className}Component implements OnInit {
+  // registerForm: FormGroup;
+  @Input() ${objectName}: ${className}
+  // empTypes: EmpType[]
+
+  constructor(private router: Router, private ${objectName}Service: ${className}Service) { }
+  //private formBuilder: FormBuilder, 
+  onSubmit() {
+    // alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.${objectName}))
+    this.save()
+  }
+
+  ngOnInit() {    
+    // this.empTypeService.getEmpTypes().subscribe((empTypes) => {
+    //   this.empTypes = empTypes
+    // })
+  }
+
+
+  save(): void {        
+    console.debug(this.${objectName})    
+    if (this.${objectName}._id == null) {
+      this.${objectName}Service.add${className}(this.${objectName}).subscribe()
+    } else {
+      this.${objectName}Service.update${className}(this.${objectName}).subscribe()
+    // this.showParent.emit(true)
+    }
+  }
+
+  update(): void {        
+    console.debug(this.${objectName})
+    this.${objectName}Service.update${className}(this.${objectName}).subscribe()
+    // this.showParent.emit(true)
+  }
+
+
+  delete(): void {    
+    this.${objectName}Service.delete${className}(this.${objectName}).subscribe()
+    // this.showParent.emit(true)
+  }
+
+  get${className}(name: String): void {
+    this.${objectName}Service.get${className}(name).subscribe(${objectName} => this.${objectName} = ${objectName})    
+    console.debug('1', this.${objectName})
+  }
+
+  clear(): void {
+    this.${objectName} = new ${className}()
+  }
+}

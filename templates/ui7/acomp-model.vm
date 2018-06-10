@@ -1,0 +1,6 @@
+export class ${className} {
+    _id: string;
+#foreach ($col in $cols)
+    ${col.varName}: string;
+#end       
+}

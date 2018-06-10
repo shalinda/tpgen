@@ -1,0 +1,54 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>${className}
+        </div>
+
+        <div class="card-body">
+          <div>
+            <!--app-${objectName} [${objectName}]="selected${className}"></app-${objectName}-->
+          </div>
+          <div>
+            <table class="table">
+              <thead>
+                <tr>
+#foreach ($col in $cols)
+                  <th>${col.title}</th>
+#end
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let ${objectName} of ${objectName}s" (click)="onClick(${objectName})">
+                  #foreach ($col in $cols)
+                  <td>{{${objectName}.$col.varName}}</td>
+#end
+                </tr>
+              </tbody>
+            </table>
+            <ul class="pagination">
+              <li class="page-item">
+                <a class="page-link" href="#">Prev</a>
+              </li>
+              <li class="page-item active">
+                <a class="page-link" href="#">1</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="#">2</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="#">3</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="#">4</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
