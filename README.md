@@ -25,7 +25,8 @@ Velocity
 
 
 Sample templates
-	-A.txt, OrderItem.txt
+	config.properties
+	teamples/ui7
 
 
 
