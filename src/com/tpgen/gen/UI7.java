@@ -49,6 +49,7 @@ public class UI7 {
     private String dir1;
     private String objectName;
     private String app;
+    private boolean isJs;
     private String tableName;
 
 
@@ -65,7 +66,7 @@ public class UI7 {
         this.tableName = tableName;
     }
 
-    public UI7(String app, String table, String db, String templates, String pkg, String dir1) throws Exception {
+    public UI7(String app, String table, String db, String templates, String pkg, String dir1, String isJs) throws Exception {
         String[] tables1 = table.split("->"); ///fk
         String[] tempTable = tables1[0].split("_");
         if (tempTable[0].length() == 1)
@@ -75,6 +76,7 @@ public class UI7 {
 
         this.table = tables1[0];
 
+        this.isJs = isJs.equals("true");
         this.app = app;
         this.pkg = pkg.split(":");
         prefixJava = new String[this.pkg.length];
@@ -175,8 +177,8 @@ public class UI7 {
                     fileName = className.toLowerCase();
                 } else if (template1[0].indexOf("pkg")  > -1) {
                     fileName = "package";
-                } else {
-                    fileName = className;
+                } else {                    
+                    fileName = isJs ? className.toLowerCase() : className;
                 }
                 generateObject(ve, path.toString(), template1[0] + ".vm", fileName + template1[1]);
             }
@@ -229,10 +231,11 @@ public class UI7 {
         Class.forName("com.tpgen.common.Global").newInstance();
         Properties config = Global.getConfig();
         String tables[] = config.getProperty("table").split(":");
+        
 
         for (String table : tables) {
             UI7 gen = new UI7(config.getProperty("app"), table, config.getProperty("db"),
-                    config.getProperty("templates"), config.getProperty("pkg"), config.getProperty("dir"));
+                    config.getProperty("templates"), config.getProperty("pkg"), config.getProperty("dir"), config.getProperty("isJs"));
             gen.execute();            
         }
     }
@@ -261,7 +264,7 @@ public class UI7 {
                 className = toJavaName(tableName, "_", false);
                 ResultSetMetaData meta = rs.getMetaData();
                 log.debug("table : " + table);
-
+                
                 for (int i = 1; i < meta.getColumnCount() + 1; i++) {
                     col = new Column();
                     colName = meta.getColumnName(i);
@@ -419,10 +422,12 @@ public class UI7 {
 //        log.debug("sqlType :" + sqlType);
         switch (sqlType) {
         case Types.CHAR:
+        case Types.LONGVARCHAR:
         case Types.VARCHAR:
             type = "String";
             break;
         case Types.BIGINT:
+        case Types.SMALLINT:
         case Types.INTEGER:
         case Types.DECIMAL:
         case Types.NUMERIC:

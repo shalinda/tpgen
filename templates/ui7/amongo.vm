@@ -5,16 +5,16 @@ const bcrypt = require("bcrypt");
 const ${className}Schema = new mongoose.Schema({
 #foreach ($col in $cols)
   $col.varName: {
-    #if (${col.fk})
-    type: mongoose.Schema.Types.ObjectId, 
-      ref: "${col.fkMethodName}",
-      default: null    
+  #if (${col.fk})  type: mongoose.Schema.Types.ObjectId, 
+    ref: "${col.fkMethodName}",
+    default: null    
     #else 
-    type: ${col.mongoType},
+  type: ${col.mongoType},
     required: true#if (${col.mongoType}== 'String'),
     trim: true#end#end
     #if (${col.mongoType}== 'Date'),
-    default: new Date()#end    
+    default: new Date()#end
+
   },
 #end
 });

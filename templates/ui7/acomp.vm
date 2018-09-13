@@ -1,26 +1,202 @@
 import { Component, OnInit, Input} from '@angular/core';
-import { ${className} } from '../../../model/${objectName}';
+import { ${className} } from '../../model/${objectName}';
 import { Router } from '@angular/router';
-import { ${className}Service }  from '../../../service/${objectName}.service';
+import { ${className}Service }  from '../../service/${objectName}.service';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { types } from 'util';
 
 @Component({
-    templateUrl: '${objectName}s.component.html'
+  templateUrl: '${objectName}s.component.html',
+  selector: 'app-${objectName}s',
+  styleUrls: ['${objectName}s.component.scss']
 })
 
 export class ${className}sComponent implements OnInit {
-  @Input() ${objectName}: ${className}
-  ${objectName}s: ${className}[]
-  selected${className}: ${className}
+  _${objectName}Form: FormGroup;
+  //_empTypes: EmpType[] = [];
+  _editMode = false;
+  _addMode = false;
 
-  constructor(private router: Router,private ${objectName}Service: ${className}Service) { }
+  ${objectName}s: ${className}[] = [];
+  _selected${className}: ${className};
+
+  // pagination
+  _usersCount = 0;
+  _pages = 0;
+  _currentPage = 0;
+
+  constructor(private ${objectName}Service: ${className}Service) { }
+    //private employeeTypeService: EmpTypeService) { }
 
   ngOnInit() {
-    this.selected${className} = new ${className}      
-    this.${objectName}Service.get${className}s().subscribe(${objectName}s=> this.${objectName}s = ${objectName}s)
+    //this.getEmpTypes();
+    this.get${className}s();
+    this._selected${className} = this.${objectName}Service.getDummy${className}();
+    this.initForm();
   }
 
-  onClick(${objectName}: ${className}) {
-    this.selected${className} = ${objectName}    
+  initForm(): void {
+    this._${objectName}Form = new FormGroup({
+#foreach ($col in $cols)  
+  ${col.varName}: new FormControl(this._selected${className}.${col.varName}, [Validators.required]),
+#end
+    });
   }
 
+  // TODO: Need to refactor this method
+  select${className}(${objectName}: ${className}): void {
+    if (this._selected${className}) {
+      if (this._selected${className}._id === ${objectName}._id) {
+        this.clear();
+        this._editMode = false;
+        return;
+      } else {
+        this._editMode = true;
+      }
+    }
+    this._selected${className} = ${objectName};
+    this.initForm();
+  }
+
+  compareRole(val1, val2) {
+    return val1 === val2;
+  }
+
+  save(): void {
+    console.log(this._${objectName}Form.value);
+    const isUserValid = this.validateUser();
+    if (isUserValid) {
+      console.log('${className} valid');
+      this.${objectName}Service.add${className}(this._${objectName}Form.value)
+        .subscribe((res) => {
+          this.clear();
+          // this.${objectName}s = [...this.${objectName}s, res];
+          this.get${className}s(this._currentPage);
+          console.log('${className} Saved: ', res);
+        }, err => {
+          console.log('Error Saving ${className}');
+        });
+    }
+  }
+
+  update1(): void {
+    const isUserValid = this.validateUser();
+    if (isUserValid) {
+      const emp = { ...this._${objectName}Form.value, _id: this._selected${className}._id};
+      console.log('Updating ${className}..', emp);
+      this.${objectName}Service.update${className}(emp)
+        .subscribe(updatedEmp => {
+          console.log('${className} Updated Successfully', updatedEmp);
+          this.update${className}Array(updatedEmp);
+        }, err => {
+          console.log('Error Updating ${className}');
+        });
+    }
+  }
+
+  delete(): void {
+    const ${objectName} = this._selected${className};
+    this.${objectName}Service.delete${className}(${objectName})
+      .subscribe(deletedEmp => {
+        console.log('${className} deleted');
+        this.remove${className}FromArray();
+        this.clear();
+      }, err => {
+        console.log('Error Deleting ${className}');
+      });
+  }
+
+  private update${className}Array(${objectName}: ${className}): void {
+    this.${objectName}s = this.${objectName}s
+      .map(emp => (emp._id === ${objectName}._id) ? ${objectName} : emp);
+  }
+
+  private remove${className}FromArray(): void {
+    const ${objectName} = this._selected${className};
+    this.${objectName}s = this.${objectName}s
+      .filter(emp => emp._id !== ${objectName}._id);
+  }
+
+  private validateUser(): boolean {
+    const formDataValid = this._${objectName}Form.valid;
+    if (!formDataValid) {
+      Object.keys(this._${objectName}Form.controls)
+        .forEach(field => {
+          const control = this._${objectName}Form.get(field);
+          control.markAsDirty({ onlySelf: true });
+        });
+    }
+    return formDataValid;
+  }
+
+  /*getEmpTypes(): void {
+    this.employeeTypeService.getEmpTypes()
+      .subscribe((empTypes: EmpType[]) => {
+        this._empTypes = empTypes;
+        console.log('EmpTypes: ', empTypes);
+      }, err => {
+        console.log('Error getting EmpTypes: ', types);
+      });
+  }*/
+
+  get${className}s(pageNum = 1, limit = 2): void {
+    this.${objectName}Service.get${className}s(pageNum, limit)
+      .subscribe(res => {
+        if (res && res.${objectName}s) {
+          this.${objectName}s = res.${objectName}s;
+          try {
+            this._usersCount = res.count;
+            this._currentPage = parseInt(res.page.toString(), 10);
+            this._pages = res.pages;
+          } catch (ex) {
+            console.log('Error Parsing pagination data');
+          }
+          console.log(res);
+        }
+      });
+  }
+
+  clear(): void {
+    this._selected${className} = this.${objectName}Service.getDummy${className}();
+    this.initForm();
+  }
+
+  showParent() {
+    // this.employee = new ${className};
+    this.get${className}s();
+  }
+
+  // pagination
+  nextPage(): void {
+    if ((this._currentPage + 1) <= this._pages) {
+      this._currentPage += 1;
+      this.get${className}s(this._currentPage);
+    }
+    console.log('next page', { currentPage: this._currentPage });
+  }
+
+  getPage(pageNum?: number): void {
+    this._currentPage = pageNum;
+    this.get${className}s(this._currentPage);
+    console.log('Page Selected: ', pageNum);
+  }
+
+  prevPage(): void {
+    if ((this._currentPage - 1) <= this._pages) {
+      this._currentPage -= 1;
+      this.get${className}s(this._currentPage);
+    }
+    console.log('pre page', { currentPage: this._currentPage });
+  }
+
+  getPagesAsArray() {
+    if (this._pages > 0) {
+      return Array(this._pages).fill(1).map((x, y) => x + y);
+    }
+    return [];
+  }
+
+  toggleHeader(): void {
+    this._addMode = !this._addMode;
+  }
 }

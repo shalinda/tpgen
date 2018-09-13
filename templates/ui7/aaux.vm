@@ -1,9 +1,9 @@
 {
 #foreach ($col in $cols)  
-  "$col.varName": #if (${col.mongoType}== 'String')"test1"#end
-#if (${col.mongoType}== 'Number')9#end
-#if (${col.mongoType}== 'Boolean')true#end,
-#if (${col.fk}== true)"1111"#end,
+  "$col.varName":#if (${col.mongoType}== 'String')"test1"#end
+#if (${col.mongoType}== 'Number')1#end
+#if (${col.mongoType}== 'Boolean')true#end
+#if (${col.mongoType}== 'Date')"1/1/2018"#end,
 #end}
 
 const ${objectName}Controller = require("../controllers/${objectName}.controller");

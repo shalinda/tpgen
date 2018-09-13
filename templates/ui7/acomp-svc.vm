@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { ${className} } from '../model/${objectName}';
+import { API_URI } from '../config/const';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json'})
@@ -15,9 +16,19 @@ const httpOptions = {
 })
 export class ${className}Service {
 
-  private url = 'http://192.168.1.89:8000/api/v1/${objectName}s';  // URL to web api
+  private url = `${API_URI}/${objectName}s`;  // URL to web api
 
   constructor(private http: HttpClient) { }
+
+    getDummy${className}(): ${className} {
+      return {
+        _id: '',
+#foreach ($col in $cols)
+  $col.varName: '',  
+#end
+//        empType: { _id: '', name: '' }
+      };
+    }
 
     add${className} (${objectName}: ${className}): Observable<${className}> {      
       return this.http.post<${className}>(this.url, ${objectName}, httpOptions)      
@@ -39,7 +50,10 @@ export class ${className}Service {
       return this.http.get<${className}>(url)
     }
 
-    get${className}s(): Observable<${className}[]> {      
-      return this.http.get<${className}[]>(this.url)
+    get${className}s(pageNum: number, limit: number): Observable<{${objectName}s: any[], count: number, page: number, pages: number }> {      
+      const url = (pageNum) ? `${API_URI}/${objectName}s?page=${pageNum}` : `${API_URI}/${objectName}s`;
+
+      return this.http.get<{ ${objectName}s: any[], count: number, page: number, pages: number}>(url);
     }
+  
 }

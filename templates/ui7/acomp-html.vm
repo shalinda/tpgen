@@ -1,54 +1,100 @@
 <div class="animated fadeIn">
   <div class="row">
-    <div class="col-lg-6">
+    <div class="col-sm-12">
+      <button (click)="toggleHeader()" style="float: right;margin-bottom: 5px;">
+        <i class="fa fa-plus"></i>
+        ${className}
+      </button>
+    </div>
+    <div class="col-sm-12" [hidden]="!_addMode">
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i>${className}
+          <i class="fa fa-align-justify"></i>${className}s
         </div>
 
         <div class="card-body">
-          <div>
-            <!--app-${objectName} [${objectName}]="selected${className}"></app-${objectName}-->
-          </div>
+          <form [formGroup]="_${objectName}Form" class="form-horizontal">
+#foreach ($col in $cols)           
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="${col.varName}">${col.title}:</label>
+              <div class="col-md-9">
+                <input type="text" formControlName="${col.varName}" class="form-control" placeholder="Enter ${col.title}..">
+                <div class="form-control-feedback" *ngIf="_${objectName}Form.controls.${col.varName}.errors && (_${objectName}Form.controls.${col.varName}.dirty || _${objectName}Form.controls.${col.varName}.touched)">
+                  <p class="error-msg" *ngIf="_${objectName}Form.controls.${col.varName}.errors.required">Please enter ${col.title}</p>
+                </div>
+              </div>
+            </div>
+#end
+
+            <div class="row" style="float:right;margin-bottom: 20px;">
+              <button [disabled]="_editMode" style="margin: 0 3px;" type="submit" class="btn btn-small btn-primary" (click)="save()">
+                <i class="fa fa-save" style="padding-right: 5px;"></i>Save
+              </button>
+              <button [disabled]="!_editMode" style="margin: 0 3px;" type="submit" class="btn btn-small btn-primary" (click)="update1()">
+                <i class="fa fa-pencil" style="padding-right: 5px;"></i>Update
+              </button>
+              <button [disabled]="!_editMode" style="margin: 0 3px;" type="button" class="btn btn-small btn-primary" (click)="delete()">
+                <i class="fa fa-trash" style="padding-right: 5px;"></i>Delete
+              </button>              
+            </div>
+          
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>View ${className}
+        </div>
+        <div class="card-body">
           <div>
             <table class="table">
               <thead>
                 <tr>
-#foreach ($col in $cols)
+#foreach ($col in $cols)                           
                   <th>${col.title}</th>
-#end
+#end                  
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let ${objectName} of ${objectName}s" (click)="onClick(${objectName})">
-                  #foreach ($col in $cols)
-                  <td>{{${objectName}.$col.varName}}</td>
-#end
+                <tr *ngFor="let ${objectName} of ${objectName}s" [ngClass]="{'selected-tr': ${objectName}?._id === _selected${className}?._id}" (click)="select${className}(${objectName})">
+#foreach ($col in $cols)                           
+                  <td>{{${objectName}.${col.varName}}}</td>
+#end                  
                 </tr>
               </tbody>
             </table>
-            <ul class="pagination">
-              <li class="page-item">
-                <a class="page-link" href="#">Prev</a>
-              </li>
-              <li class="page-item active">
-                <a class="page-link" href="#">1</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="#">2</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="#">3</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="#">4</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="#">Next</a>
-              </li>
-            </ul>
+          
+            <div class="row">
+              <div class="col-sm-12" *ngIf="_pages > 0">
+                <ul class="pagination justify-content-center">
+                  <li *ngIf="_currentPage == 1" class="page-item disabled">
+                    <a disabled class="page-link">Prev</a>
+                  </li>
+                  <li *ngIf="_currentPage > 1 && _currentPage <= _pages" class="page-item">
+                    <a disabled class="page-link" (click)="prevPage()">Prev</a>
+                  </li>
+          
+                  <li [ngClass]="{'active': pageNum == _currentPage}" class="page-item" (click)="getPage(pageNum)" *ngFor="let pageNum of getPagesAsArray()">
+                    <a class="page-link">{{pageNum}}</a>
+                  </li>
+          
+                  <li *ngIf="_currentPage == _pages" class="page-item disabled">
+                    <a disabled class="page-link">Next</a>
+                  </li>
+                  <li *ngIf="_currentPage >= 1 && _currentPage < _pages" (click)="nextPage()">
+                    <a class="page-link">Next</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>

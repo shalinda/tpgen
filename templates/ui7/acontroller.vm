@@ -9,17 +9,31 @@
  * @desc - module for get all ${objectName}.
  */
 module.exports.get${className}s = (req, res) => {
+  const itemPerPage = 5
+  const page = req.query.page || 1
   const query = ${className}.find({});
   
   query
     #foreach ($col in $fkcols).populate("$col.varName")
-#end  
+#end
     .lean()
+    .skip((itemPerPage * page) - itemPerPage)
+    .limit(itemPerPage)
     .exec()
-    .then(${objectName}s => res.status(200)
-      .json(${objectName}s))
-    .catch(err => res.status(500)
-      .json({error: true, message: err.message}))
+    .then(${objectName}s => {
+      ${className}.count()
+        .exec()
+        .then(count => res.status(200)
+          .json({
+            ${objectName}s,
+            count,
+            page,
+            pages: (count > 0) ? Math.ceil(count / itemPerPage) : 0 // TODO: handle math errors
+          }))
+        .catch(err => res.status(500)
+          .json({ message: err.message }))
+    })    
+
 }
 
 /**
@@ -33,6 +47,8 @@ module.exports.get${className}ById = (req, res) => {
       .json({ error: true, message: "${className} Id Required" })
 
   ${className}.findById(_id)
+    #foreach ($col in $fkcols).populate("$col.varName")
+#end  
     .lean()
     .exec()
     .then(${objectName} => res.status(200)
@@ -69,6 +85,8 @@ module.exports.update1 = (req, res) => {
     options = { new: true };
 
   ${className}.findByIdAndUpdate(query, update, options)
+    #foreach ($col in $fkcols).populate("$col.varName")
+#end  
     .lean()
     .exec()
     .then(${objectName} => res.status(200)
