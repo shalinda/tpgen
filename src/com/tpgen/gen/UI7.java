@@ -52,7 +52,6 @@ public class UI7 {
     private boolean isJs;
     private String tableName;
 
-
     {
         escapes.put("MYSQL", "`:`".split(":"));
         escapes.put("SQLSVR", "[:]".split(":"));
@@ -66,8 +65,9 @@ public class UI7 {
         this.tableName = tableName;
     }
 
-    public UI7(String app, String table, String db, String templates, String pkg, String dir1, String isJs) throws Exception {
-        String[] tables1 = table.split("->"); ///fk
+    public UI7(String app, String table, String db, String templates, String pkg, String dir1, String isJs)
+            throws Exception {
+        String[] tables1 = table.split("->"); /// fk
         String[] tempTable = tables1[0].split("_");
         if (tempTable[0].length() == 1)
             this.tableName = tables1[0].substring(2);
@@ -86,7 +86,7 @@ public class UI7 {
         }
 
         this.dir1 = dir1;
-//        this.module = module;
+        // this.module = module;
         this.templates = templates;
         this.db = db;
 
@@ -97,22 +97,24 @@ public class UI7 {
             if (i > 0) {
                 Column col;
                 String[] tbcols = tables1[i].split(",");
-                if (tbcols.length != 4) throw new RuntimeException("table spec format error in fk " + tables1[0]);
-                col = findFK(tbcols[0], tbcols[1], tbcols[2],tbcols[3]);
+                if (tbcols.length != 4)
+                    throw new RuntimeException("table spec format error in fk [4 , seperated cols needed] " + tables1[0]
+                            + " cols " + tables1[i]);
+                col = findFK(tbcols[0], tbcols[1], tbcols[2], tbcols[3]);
                 fkcols.add(col);
             }
 
         }
 
         this.objectName = StringUtils.uncapitalize(className);
-//        pkg  = toPackageName(module, " ");
+        // pkg = toPackageName(module, " ");
         context = new VelocityContext();
         context.put("app", app);
         context.put("module", module);
         context.put("db", db);
         context.put("table", tableName);
         context.put("package", pkg);
-//        context.put("constant", toConstantName(module, " "));
+        // context.put("constant", toConstantName(module, " "));
         context.put("className", className);
         context.put("objectName", objectName);
         context.put("cols", cols);
@@ -121,7 +123,8 @@ public class UI7 {
 
         ArrayList<Column> datecols = new ArrayList<Column>();
         for (Column col : cols) {
-            if (col.getColType() == 93) datecols.add(col);
+            if (col.getColType() == 93)
+                datecols.add(col);
         }
         context.put("dates", datecols);
 
@@ -145,12 +148,12 @@ public class UI7 {
     }
 
     /**
-     * Method should be implemented differently for different frameworks/ or a collaboration of classes
-     * who achieves a collective task
+     * Method should be implemented differently for different frameworks/ or a
+     * collaboration of classes who achieves a collective task
      *
      */
     public void execute() {
-    	FileWriter writer = null;
+        FileWriter writer = null;
         String app = this.app.replace(".", "/");
         try {
             String[] templates1 = templates.split(":");
@@ -165,8 +168,7 @@ public class UI7 {
                 }
                 if (template1[0].indexOf("pkg") > -1) {
                     path.insert(0, "src/com/" + app + "/").append("/" + objectName);
-                } else if (template1[1].indexOf("java") > -1 ||
-                        template1[1].indexOf("hbm.xml") > -1) {
+                } else if (template1[1].indexOf("java") > -1 || template1[1].indexOf("hbm.xml") > -1) {
                     path.insert(0, "src/com/" + app + "/");
                 } else if (template1[0].indexOf("web") > -1) {
                     path.append("/").append(objectName);
@@ -175,9 +177,9 @@ public class UI7 {
                 String fileName;
                 if (template1[1].indexOf("struts") > -1) {
                     fileName = className.toLowerCase();
-                } else if (template1[0].indexOf("pkg")  > -1) {
+                } else if (template1[0].indexOf("pkg") > -1) {
                     fileName = "package";
-                } else {                    
+                } else {
                     fileName = isJs ? className.toLowerCase() : className;
                 }
                 generateObject(ve, path.toString(), template1[0] + ".vm", fileName + template1[1]);
@@ -194,49 +196,49 @@ public class UI7 {
         }
     }
 
-	private void generateObject(VelocityEngine ve, String directory, String template, String file) {
-		FileWriter writer = null;
-		try {
-			File dir = new File(dir1 + directory);
-			if (!dir.exists()) {
-				 // @todo check if actually created
-				log.debug(dir.getAbsolutePath());
-				log.debug("mkdir : " + dir.mkdirs());
-			}
-			File child = new File(dir, file);
-			if (!child.exists()) {
-				child.delete();
-			}
-			child.createNewFile();
+    private void generateObject(VelocityEngine ve, String directory, String template, String file) {
+        FileWriter writer = null;
+        try {
+            File dir = new File(dir1 + directory);
+            if (!dir.exists()) {
+                // @todo check if actually created
+                log.debug(dir.getAbsolutePath());
+                log.debug("mkdir : " + dir.mkdirs());
+            }
+            File child = new File(dir, file);
+            if (!child.exists()) {
+                child.delete();
+            }
+            child.createNewFile();
 
-			Template t = ve.getTemplate(template);
-			writer = new FileWriter(child);
-			t.merge(context, writer);
-			writer.flush();
-			log.info("merging template:" + template + " > " + child.getAbsolutePath());
-	    } catch (Exception e) {
-	        log.error("Error on executing UI7", e);
-	    } finally {
-	        if (writer != null) {
-	            try {
-	                writer.close();
-	            } catch (IOException e) {
-	            }
-	        }
-	    }
+            Template t = ve.getTemplate(template);
+            writer = new FileWriter(child);
+            t.merge(context, writer);
+            writer.flush();
+            log.info("merging template:" + template + " > " + child.getAbsolutePath());
+        } catch (Exception e) {
+            log.error("Error on executing UI7", e);
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                }
+            }
+        }
 
-	}
+    }
 
     public static void main(String[] args) throws Exception {
         Class.forName("com.tpgen.common.Global").newInstance();
         Properties config = Global.getConfig();
         String tables[] = config.getProperty("table").split(":");
-        
 
         for (String table : tables) {
             UI7 gen = new UI7(config.getProperty("app"), table, config.getProperty("db"),
-                    config.getProperty("templates"), config.getProperty("pkg"), config.getProperty("dir"), config.getProperty("isJs"));
-            gen.execute();            
+                    config.getProperty("templates"), config.getProperty("pkg"), config.getProperty("dir"),
+                    config.getProperty("isJs"));
+            gen.execute();
         }
     }
 
@@ -264,19 +266,19 @@ public class UI7 {
                 className = toJavaName(tableName, "_", false);
                 ResultSetMetaData meta = rs.getMetaData();
                 log.debug("table : " + table);
-                
+
                 for (int i = 1; i < meta.getColumnCount() + 1; i++) {
                     col = new Column();
                     colName = meta.getColumnName(i);
                     colType = new Integer(meta.getColumnType(i));
-                    col.setIndex(i-1);
+                    col.setIndex(i - 1);
                     col.setColName(colName);
                     col.setColType(colType);
                     col.setJavaType(toJavaType(colType));
                     col.setMongoType(toMongoType(colType));
                     col.setSample("Integer".equals(col.getJavaType()) ? "11111111111" : "abc");
                     col.setTitle(toModuleTitle(colName, "_"));
-                    //col.setLength(meta.getPrecision(i));
+                    // col.setLength(meta.getPrecision(i));
                     varName = toJavaName(colName, "_", true);
                     methodName = toJavaName(colName, "_", false);
                     col.setVarName(varName);
@@ -297,14 +299,19 @@ public class UI7 {
     private List doJavaTransform(ResultSet rs) {
         log.debug("table : " + table);
         isJavaTransform = true;
-        List<Column> cols = new ArrayList(); Column col;
-        String colName; int colType = 0; int i = 1; String varName; String methodName;
+        List<Column> cols = new ArrayList();
+        Column col;
+        String colName;
+        int colType = 0;
+        int i = 1;
+        String varName;
+        String methodName;
         try {
             while (rs.next()) {
                 className = rs.getString("class"); // inefficient
                 col = new Column();
                 colName = rs.getString("field");
-                col.setIndex(i-1);
+                col.setIndex(i - 1);
                 col.setColName(colName);
                 col.setColType(colType);
                 col.setJavaType(rs.getString("type"));
@@ -327,8 +334,7 @@ public class UI7 {
         return escapeArray == null ? table : escapeArray[0] + table + escapeArray[1];
     }
 
-    private static String toJavaName(String colName, String separator,
-                                     boolean lowerFirst) {
+    private static String toJavaName(String colName, String separator, boolean lowerFirst) {
         String javaName = "";
         StringTokenizer st = new StringTokenizer(colName, separator, false);
         while (st.hasMoreElements()) {
@@ -349,7 +355,7 @@ public class UI7 {
         StringTokenizer st = new StringTokenizer(colName, separator, false);
         while (st.hasMoreElements()) {
             String element = (String) st.nextElement();
-                newName += StringUtils.lowerCase(element);
+            newName += StringUtils.lowerCase(element);
         }
         return newName;
     }
@@ -360,7 +366,7 @@ public class UI7 {
         while (st.hasMoreElements()) {
             String element = (String) st.nextElement();
             newName += StringUtils.upperCase(element);
-            if(st.hasMoreElements()) {
+            if (st.hasMoreElements()) {
                 newName += "_";
             }
         }
@@ -372,9 +378,9 @@ public class UI7 {
         StringTokenizer st = new StringTokenizer(colName, separator, false);
         while (st.hasMoreElements()) {
             String element = (String) st.nextElement();
-            //element += StringUtils.lowerCase(element);
+            // element += StringUtils.lowerCase(element);
             newName += StringUtils.capitalize(element);
-            if(st.hasMoreElements()) {
+            if (st.hasMoreElements()) {
                 newName += " ";
             }
         }
@@ -384,7 +390,7 @@ public class UI7 {
     private String toJavaType(int sqlType) {
         String type = "";
 
-//        log.debug("sqlType :" + sqlType);
+        // log.debug("sqlType :" + sqlType);
         switch (sqlType) {
         case Types.CHAR:
         case Types.VARCHAR:
@@ -396,10 +402,10 @@ public class UI7 {
             break;
         case Types.DECIMAL:
         case Types.NUMERIC:
-            type = "Integer"; //Double
+            type = "Integer"; // Double
             break;
         case Types.DOUBLE:
-            type = "Double"; //Double
+            type = "Double"; // Double
             break;
         case Types.DATE:
         case Types.TIMESTAMP:
@@ -419,7 +425,7 @@ public class UI7 {
     private String toMongoType(int sqlType) {
         String type = "";
 
-//        log.debug("sqlType :" + sqlType);
+        // log.debug("sqlType :" + sqlType);
         switch (sqlType) {
         case Types.CHAR:
         case Types.LONGVARCHAR:
@@ -432,7 +438,7 @@ public class UI7 {
         case Types.DECIMAL:
         case Types.NUMERIC:
         case Types.DOUBLE:
-            type = "Number"; //Double
+            type = "Number"; // Double
             break;
         case Types.DATE:
         case Types.TIMESTAMP:

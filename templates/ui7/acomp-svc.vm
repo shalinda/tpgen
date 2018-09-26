@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
+import { Client } from './client.service';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { ${className} } from '../model/${objectName}';
-import { API_URI } from '../config/const';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json'})
@@ -16,44 +15,38 @@ const httpOptions = {
 })
 export class ${className}Service {
 
-  private url = `${API_URI}/${objectName}s`;  // URL to web api
-
-  constructor(private http: HttpClient) { }
+  constructor(private client: Client) { }
 
     getDummy${className}(): ${className} {
       return {
         _id: '',
 #foreach ($col in $cols)
-  $col.varName: '',  
+        $col.varName: '',  
 #end
 //        empType: { _id: '', name: '' }
       };
     }
 
-    add${className} (${objectName}: ${className}): Observable<${className}> {      
-      return this.http.post<${className}>(this.url, ${objectName}, httpOptions)      
+    add${className} (${objectName}: ${className}): Observable<${className}> {            
+      return <Observable<${className}>> this.client.post(`${objectName}s`, ${objectName});
     }
 
-    update${className} (${objectName}: ${className}): Observable<${className}> {      
-      return this.http.put<${className}>(this.url, ${objectName}, httpOptions)      
+    update${className} (${objectName}: ${className}): Observable<${className}> {            
+      return <Observable<${className}>> this.client.put(`${objectName}s`, ${objectName});     
     }
 
     delete${className}(${objectName}: ${className}) {
-      //if (${objectName}._id == null) return ${objectName};
-      const url = `${this.url}/${${objectName}._id}`;
-      return this.http.delete(url)      
+      return <Observable<${className}>> this.client.delete(`${objectName}s/${${objectName}._id}`);     
     }
 
      /** GET hero by id. Will 404 if id not found */
     get${className}(name: String): Observable<${className}> {
-      const url = `${this.url}/${name}`;
-      return this.http.get<${className}>(url)
+      return <Observable<${className}>> this.client.get(`${objectName}s/${name}`);
     }
 
     get${className}s(pageNum: number, limit: number): Observable<{${objectName}s: any[], count: number, page: number, pages: number }> {      
-      const url = (pageNum) ? `${API_URI}/${objectName}s?page=${pageNum}` : `${API_URI}/${objectName}s`;
-
-      return this.http.get<{ ${objectName}s: any[], count: number, page: number, pages: number}>(url);
+      const url = (pageNum) ? `${objectName}s?page=${pageNum}` : `${objectName}s`;
+      return <Observable < { ${objectName}s: any[], count: number, page: number, pages: number }>>this.client.get(url);      
     }
-  
+    
 }
