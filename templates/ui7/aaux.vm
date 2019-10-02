@@ -13,7 +13,7 @@ app.route("/api/v1/${objectName}s")
   .post(${objectName}Controller.create)
   .put(${objectName}Controller.update1);
 
-app.route("/api/v1/${objectName}s/:${className}Id")
+app.route("/api/v1/${objectName}s/:${objectName}Id")
   .get(${objectName}Controller.get${className}ById)  
   .delete(${objectName}Controller.delete);   
 

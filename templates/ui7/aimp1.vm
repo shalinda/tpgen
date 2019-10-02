@@ -1,0 +1,8 @@
+{
+#foreach ($col in $cols)  
+  "$col.varName": #if (${col.mongoType}== 'String')"test1"#end
+#if (${col.mongoType}== 'Number')9#end
+#if (${col.mongoType}== 'Boolean')true#end,
+#if (${col.fk}== true)"1111"#end,
+#end}
+

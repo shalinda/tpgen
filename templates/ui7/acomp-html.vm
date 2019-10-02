@@ -14,11 +14,18 @@
 
         <div class="card-body">
           <form [formGroup]="_${objectName}Form" class="form-horizontal">
-#foreach ($col in $cols)           
+#foreach ($col in $cols)
             <div class="form-group row">
-              <label class="col-md-3 col-form-label" for="${col.varName}">${col.title}:</label>
+              <label class="col-md-3 col-form-label" for="${col.varName}">${col.methodName}:</label>
               <div class="col-md-9">
-                <input type="text" formControlName="${col.varName}" class="form-control" placeholder="Enter ${col.title}..">
+#if($col.fk)
+                <select class="form-control" formControlName="$col.varName" [compareWith]="compareRole">
+                  <!-- <option value="">Select ${col.methodName}</option> -->
+                  <option *ngFor="let _$col.varName of _${col.varName}s" value="{{_$col.varName._id}}">{{_$col.varName?.$col.fkName}}</option>
+                </select>
+#else
+                <input type="text" formControlName="${col.varName}" class="form-control" placeholder="Enter ${col.methodName}..">
+#end
                 <div class="form-control-feedback" *ngIf="_${objectName}Form.controls.${col.varName}.errors && (_${objectName}Form.controls.${col.varName}.dirty || _${objectName}Form.controls.${col.varName}.touched)">
                   <p class="error-msg" *ngIf="_${objectName}Form.controls.${col.varName}.errors.required">Please enter ${col.title}</p>
                 </div>
@@ -56,14 +63,18 @@
               <thead>
                 <tr>
 #foreach ($col in $cols)                           
-                  <th>${col.title}</th>
+                  <th>${col.methodName}</th>
 #end                  
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let ${objectName} of ${objectName}s" [ngClass]="{'selected-tr': ${objectName}?._id === _selected${className}?._id}" (click)="select${className}(${objectName})">
-#foreach ($col in $cols)                           
+#foreach ($col in $cols)
+    #if($col.fk)
+                  <td>{{$objectName.$col.varName.$col.fkName}}</td>
+    #else
                   <td>{{${objectName}.${col.varName}}}</td>
+    #end
 #end                  
                 </tr>
               </tbody>

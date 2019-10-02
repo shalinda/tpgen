@@ -4,6 +4,13 @@ import { Router } from '@angular/router';
 import { ${className}Service }  from '../../service/${objectName}.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { types } from 'util';
+#foreach ($col in $fkcols)
+import { ${col.methodName} } from '../../model/${col.varName}';
+#end
+
+#foreach ($col in $fkcols)
+import { ${col.methodName}Service }  from '../../service/${col.varName}.service';
+#end
 
 @Component({
   templateUrl: '${objectName}s.component.html',
@@ -13,9 +20,11 @@ import { types } from 'util';
 
 export class ${className}sComponent implements OnInit {
   _${objectName}Form: FormGroup;
-  //_empTypes: EmpType[] = [];
   _editMode = false;
   _addMode = false;
+#foreach ($col in $fkcols)
+  _${col.varName}s: ${col.methodName}[] = [];
+#end
 
   ${objectName}s: ${className}[] = [];
   _selected${className}: ${className};
@@ -25,11 +34,16 @@ export class ${className}sComponent implements OnInit {
   _pages = 0;
   _currentPage = 0;
 
-  constructor(private ${objectName}Service: ${className}Service) { }
-    //private employeeTypeService: EmpTypeService) { }
+  constructor(private ${objectName}Service: ${className}Service
+#foreach ($col in $fkcols)
+    ,private ${col.varName}Service: ${col.methodName}Service
+#end
+) { }
 
   ngOnInit() {
-    //this.getEmpTypes();
+#foreach ($col in $fkcols)
+    this.get${col.methodName}s();
+#end
     this.get${className}s();
     this._selected${className} = this.${objectName}Service.getDummy${className}();
     this.initForm();
@@ -37,11 +51,26 @@ export class ${className}sComponent implements OnInit {
 
   initForm(): void {
     this._${objectName}Form = new FormGroup({
-#foreach ($col in $cols)  
-  ${col.varName}: new FormControl(this._selected${className}.${col.varName}, [Validators.required]),
+#foreach ($col in $cols)
+#if($col.fk)
+    ${col.varName}: new FormControl(this._selected${className}.${col.varName}._id, [Validators.required]),
+#else
+    ${col.varName}: new FormControl(this._selected${className}.${col.varName}, [Validators.required]),
+#end
 #end
     });
   }
+
+#foreach ($col in $fkcols)
+  get${col.methodName}s(): void {
+    this.${col.varName}Service.get${col.methodName}s(null, null)
+      .subscribe((res: any) => {
+        this._${col.varName}s = res.${col.varName}s;
+      }, err => {
+        console.log(err);
+      });
+  }
+#end
 
   // TODO: Need to refactor this method
   select${className}(${objectName}: ${className}): void {
@@ -128,16 +157,6 @@ export class ${className}sComponent implements OnInit {
     }
     return formDataValid;
   }
-
-  /*getEmpTypes(): void {
-    this.employeeTypeService.getEmpTypes()
-      .subscribe((empTypes: EmpType[]) => {
-        this._empTypes = empTypes;
-        console.log('EmpTypes: ', empTypes);
-      }, err => {
-        console.log('Error getting EmpTypes: ', types);
-      });
-  }*/
 
   get${className}s(pageNum = 1, limit = 2): void {
     this.${objectName}Service.get${className}s(pageNum, limit)

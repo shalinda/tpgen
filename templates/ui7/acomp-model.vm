@@ -1,6 +1,14 @@
+#foreach ($col in $fkcols)
+import { $col.methodName } from './$col.varName';
+#end
+
 export class ${className} {
     _id: string;
 #foreach ($col in $cols)
+#if($col.fk)
+    ${col.varName}: ${col.methodName};
+#else
     ${col.varName}: string;
+#end
 #end       
 }

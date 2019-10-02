@@ -1,0 +1,17 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ${className}sComponent } from './${objectName}s.component';
+import { ${className}sRoutingModule } from './${objectName}s-routing.module';
+
+@NgModule({
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ${className}sRoutingModule
+  ],
+  declarations: [${className}sComponent],
+  exports: [${className}sComponent]
+})
+export class ${className}sModule {}

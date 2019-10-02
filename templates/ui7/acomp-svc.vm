@@ -3,6 +3,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Client } from './client.service';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+#foreach ($col in $fkcols)
+import { ${col.methodName} } from '../model/${col.varName}';
+#end
 
 import { ${className} } from '../model/${objectName}';
 
@@ -21,13 +24,17 @@ export class ${className}Service {
       return {
         _id: '',
 #foreach ($col in $cols)
-        $col.varName: '',  
+#if($col.fk)
+        $col.varName: new ${col.methodName}(),
+#else
+        $col.varName: '',
+#end
 #end
 //        empType: { _id: '', name: '' }
       };
     }
 
-    add${className} (${objectName}: ${className}): Observable<${className}> {            
+    add${className} (${objectName}: ${className}): Observable<${className}> {
       return <Observable<${className}>> this.client.post(`${objectName}s`, ${objectName});
     }
 
