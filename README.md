@@ -17,7 +17,7 @@ Change build/config.properties to reflect
 	-module=<module name / package name>
 
 build/ run
-	-Ant should build it (JDK 1.6+ recommended with ant 1.6.5+)
+	-Ant should build it (JDK 1.8 recommended with ant 1.6.5+)
 	-run bat will run and generate the output in the 'gen' dir, uses your properties from the 'build/config.properties'
 
 Velocity
