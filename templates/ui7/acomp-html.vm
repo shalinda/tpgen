@@ -5,6 +5,9 @@
         <i class="fa fa-plus"></i>
         ${className}
       </button>
+      <button (click)="refresh()" style="float: right;margin-bottom: 5px;margin-right: 5px;">
+        Refresh
+      </button>
     </div>
     <div class="col-sm-12" [hidden]="!_addMode">
       <div class="card">
@@ -14,15 +17,26 @@
 
         <div class="card-body">
           <form [formGroup]="_${objectName}Form" class="form-horizontal">
-#foreach ($col in $cols)
+          <div class="title-wrapper row form-group" [hidden]="notifications['header'] === ''">            
+            <div class="col-sm-6 col-xs-12">
+              <div class="alert alert-{{_alertType}}" role="alert">
+                {{notifications['header']}}
+              </div>
+            </div>
+          </div>          
+  #foreach ($col in $cols)
             <div class="form-group row">
               <label class="col-md-3 col-form-label" for="${col.varName}">${col.methodName}:</label>
               <div class="col-md-9">
 #if($col.fk)
                 <select class="form-control" formControlName="$col.varName" [compareWith]="compareRole">
-                  <!-- <option value="">Select ${col.methodName}</option> -->
                   <option *ngFor="let _$col.varName of _${col.varName}s" value="{{_$col.varName._id}}">{{_$col.varName?.$col.fkName}}</option>
                 </select>
+#elseif (${col.mongoType}== 'Date')
+             <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                <input type="text" [owlDateTime]="dt${col.varName}" [owlDateTimeTrigger]="dt${col.varName}" formControlName="${col.varName}" class="form-control" placeholder="Enter DateTime..">
+                <owl-date-time #dt${col.varName}></owl-date-time>
 #else
                 <input type="text" formControlName="${col.varName}" class="form-control" placeholder="Enter ${col.methodName}..">
 #end
@@ -30,6 +44,9 @@
                   <p class="error-msg" *ngIf="_${objectName}Form.controls.${col.varName}.errors.required">Please enter ${col.title}</p>
                 </div>
               </div>
+#if (${col.mongoType}== 'Date')
+            </div>
+#end
             </div>
 #end
 

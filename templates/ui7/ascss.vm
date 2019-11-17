@@ -1,0 +1,17 @@
+tr {
+    cursor: pointer;
+  }
+
+  .error-msg {
+    color: red;
+  }
+
+  .selected-tr {
+    background-color: #eff9fc;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.5rem;
+  }
+

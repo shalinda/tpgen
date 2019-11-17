@@ -7,9 +7,9 @@ import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-${objectName}',
-  // templateUrl: './${objectName}-detail.component.html',
-  // styleUrls: ['./${objectName}-detail.component.css']
-  templateUrl: './${objectName}.component.html'
+  // templateUrl: './${lowerName}-detail.component.html',
+  // styleUrls: ['./${lowerName}-detail.component.css']
+  templateUrl: './${lowerName}.component.html'
 })
 
 export class ${className}Component implements OnInit {

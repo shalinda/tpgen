@@ -1,15 +1,15 @@
 import { Component, OnInit, Input} from '@angular/core';
-import { ${className} } from '../../model/${objectName}';
+import { ${className} } from '../../model/${lowerName}';
 import { Router } from '@angular/router';
-import { ${className}Service }  from '../../service/${objectName}.service';
+import { ${className}Service }  from '../../service/${lowerName}.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { types } from 'util';
 #foreach ($col in $fkcols)
-import { ${col.methodName} } from '../../model/${col.varName}';
+import { ${col.methodName} } from '../../model/${col.lowerName}';
 #end
 
 #foreach ($col in $fkcols)
-import { ${col.methodName}Service }  from '../../service/${col.varName}.service';
+import { ${col.methodName}Service }  from '../../service/${col.lowerName}.service';
 #end
 
 @Component({
@@ -22,6 +22,13 @@ export class ${className}sComponent implements OnInit {
   _${objectName}Form: FormGroup;
   _editMode = false;
   _addMode = false;
+  notifications = {
+    header: '',
+    details: '',
+    cartons: ''
+  };
+  _alertType = '';
+
 #foreach ($col in $fkcols)
   _${col.varName}s: ${col.methodName}[] = [];
 #end
@@ -72,6 +79,10 @@ export class ${className}sComponent implements OnInit {
   }
 #end
 
+  refresh(): void {
+    this.get${className}s();
+  }
+
   // TODO: Need to refactor this method
   select${className}(${objectName}: ${className}): void {
     if (this._selected${className}) {
@@ -102,8 +113,10 @@ export class ${className}sComponent implements OnInit {
           // this.${objectName}s = [...this.${objectName}s, res];
           this.get${className}s(this._currentPage);
           console.log('${className} Saved: ', res);
-        }, err => {
+          this.msgAlert('header', 'Saved successfully', 'success');
+        }, err => {          
           console.log('Error Saving ${className}');
+          this.msgAlert('header', 'Error saving', 'danger');
         });
     }
   }
@@ -117,8 +130,10 @@ export class ${className}sComponent implements OnInit {
         .subscribe(updatedEmp => {
           console.log('${className} Updated Successfully', updatedEmp);
           this.update${className}Array(updatedEmp);
+          this.msgAlert('header', 'Saved successfully', 'success');
         }, err => {
           console.log('Error Updating ${className}');
+          this.msgAlert('header', 'Error saving', 'danger');
         });
     }
   }
@@ -130,8 +145,10 @@ export class ${className}sComponent implements OnInit {
         console.log('${className} deleted');
         this.remove${className}FromArray();
         this.clear();
+        this.msgAlert('header', 'Deleted successfully', 'success');
       }, err => {
         console.log('Error Deleting ${className}');
+        this.msgAlert('header', 'Error deleting', 'danger');
       });
   }
 
@@ -217,5 +234,14 @@ export class ${className}sComponent implements OnInit {
 
   toggleHeader(): void {
     this._addMode = !this._addMode;
+  }
+
+  msgAlert(section, msg, type) {
+    this.notifications[section] = msg;
+    this._alertType = type;
+    setTimeout(() => {
+      this.notifications[section] = '';
+      this._alertType = '';
+    }, 4000);
   }
 }

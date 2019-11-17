@@ -1,14 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { ${className}sComponent } from './${objectName}s.component';
-import { ${className}sRoutingModule } from './${objectName}s-routing.module';
+import { ${className}sComponent } from './${lowerName}s.component';
+import { ${className}sRoutingModule } from './${lowerName}s-routing.module';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime'
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
     ${className}sRoutingModule
   ],
   declarations: [${className}sComponent],

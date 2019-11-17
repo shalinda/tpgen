@@ -16,7 +16,7 @@ import java.util.StringTokenizer;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * @author SXPSL
+ * @author Shalinda Ranaisnghe
  *
  */
 public class DBImporter {

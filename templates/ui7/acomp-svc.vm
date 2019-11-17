@@ -7,7 +7,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { ${col.methodName} } from '../model/${col.varName}';
 #end
 
-import { ${className} } from '../model/${objectName}';
+import { ${className} } from '../model/${lowerName}';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json'})

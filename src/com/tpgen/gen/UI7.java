@@ -20,7 +20,7 @@ import com.tpgen.common.Global;
 import com.tpgen.common.FrameworkException;
 
 /**
- * @author Shalinda Ranasinghe <shalinda@tpgen.com>
+ * @author Shalinda Ranasinghe <shalinda@gmail.com>
  */
 
 public class UI7 {
@@ -117,6 +117,7 @@ public class UI7 {
         // context.put("constant", toConstantName(module, " "));
         context.put("className", className);
         context.put("objectName", objectName);
+        context.put("lowerName", StringUtils.lowerCase(objectName));
         context.put("cols", cols);
         context.put("pk", cols.get(0));
         context.put("fkcols", fkcols);
@@ -282,6 +283,7 @@ public class UI7 {
                     varName = toJavaName(colName, "_", true);
                     methodName = toJavaName(colName, "_", false);
                     col.setVarName(varName);
+                    col.setLowerName(StringUtils.lowerCase(varName));
                     col.setMethodName(methodName);
                     cols.add(col);
                 }

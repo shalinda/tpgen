@@ -1,9 +1,9 @@
 /**
  * @author : Shalinda Ranasinghe
- * @copyright: 2018
+ * @copyright: 2019
  */
 
- const ${className} = require("../models/${objectName}");
+ const ${className} = require("../models/${lowerName}");
 
 /**
  * @desc - module for get all ${objectName}.
@@ -14,7 +14,8 @@ module.exports.get${className}s = (req, res) => {
   const query = ${className}.find({});
   
   query
-    #foreach ($col in $fkcols).populate("$col.varName")
+#foreach ($col in $fkcols)
+    .populate("$col.varName")
 #end
     .lean()
     .skip((itemPerPage * page) - itemPerPage)
@@ -47,7 +48,8 @@ module.exports.get${className}ById = (req, res) => {
       .json({ error: true, message: "${className} Id Required" })
 
   ${className}.findById(_id)
-    #foreach ($col in $fkcols).populate("$col.varName")
+#foreach ($col in $fkcols)
+    .populate("$col.varName")
 #end  
     .lean()
     .exec()
@@ -85,7 +87,8 @@ module.exports.update1 = (req, res) => {
     options = { new: true };
 
   ${className}.findByIdAndUpdate(query, update, options)
-    #foreach ($col in $fkcols).populate("$col.varName")
+#foreach ($col in $fkcols)
+    .populate("$col.varName")
 #end  
     .lean()
     .exec()

@@ -1,3 +1,4 @@
+// postman
 {
 #foreach ($col in $cols)  
   "$col.varName":#if (${col.mongoType}== 'String')"test1"#end
@@ -6,7 +7,8 @@
 #if (${col.mongoType}== 'Date')"1/1/2018"#end,
 #end}
 
-const ${objectName}Controller = require("../controllers/${objectName}.controller");
+// backend/routes/user.routes.js
+const ${objectName}Controller = require("../controllers/${lowerName}.controller");
 
 app.route("/api/v1/${objectName}s")
   .get(${objectName}Controller.get${className}s)
@@ -17,3 +19,22 @@ app.route("/api/v1/${objectName}s/:${objectName}Id")
   .get(${objectName}Controller.get${className}ById)  
   .delete(${objectName}Controller.delete);   
 
+// front/src/app/app.routing.ts
+  {
+    path: '${lowerName}s',
+    loadChildren: './views/${lowerName}s/${lowerName}s.module__${className}sModule',
+    canActivate: [IsRolePresentGuardService],
+    data: {
+        roles: ['ADMIN', 'SUPER ADMIN']
+    },
+  },
+
+// front/src/app/_nav.ts
+// children
+
+  {
+    name: '${className}s',
+    url: '/${lowerName}s',
+    icon: 'icon-user',
+    roles: ['ADMIN', 'SUPER ADMIN']
+  },
