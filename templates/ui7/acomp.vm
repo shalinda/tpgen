@@ -107,7 +107,10 @@ export class ${className}sComponent implements OnInit {
     const isUserValid = this.validateUser();
     if (isUserValid) {
       console.log('${className} valid');
-      this.${objectName}Service.add${className}(this._${objectName}Form.value)
+      const data = JSON.parse(localStorage.getItem('user_data'));
+      const obj = { ...this._${objectName}Form.value, company: data.facNo.toString()};
+      
+      this.${objectName}Service.add${className}(obj)
         .subscribe((res) => {
           this.clear();
           // this.${objectName}s = [...this.${objectName}s, res];

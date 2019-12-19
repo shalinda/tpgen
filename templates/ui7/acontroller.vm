@@ -11,7 +11,8 @@
 module.exports.get${className}s = (req, res) => {
   const itemPerPage = 5
   const page = req.query.page || 1
-  const query = ${className}.find({});
+  const data = JSON.parse(req.headers.data);
+  const query = ${className}.find({"company": data.facNo});
   
   query
 #foreach ($col in $fkcols)
