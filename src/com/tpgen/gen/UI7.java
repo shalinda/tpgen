@@ -139,6 +139,7 @@ public class UI7 {
             if (sourceCol.equals(col.getColName())) {
                 col.setFk(true);
                 col.setFkMethodName(toJavaName(destTable, "_", false));
+                col.setFkLowerName(StringUtils.lowerCase(toJavaName(destTable, "_", false)));                
                 col.setFkVarName(toJavaName(destTable, "_", true));
                 col.setFkKey(toJavaName(destKey, "_", true));
                 col.setFkName(toJavaName(destName, "_", true));
@@ -279,7 +280,7 @@ public class UI7 {
                     col.setMongoType(toMongoType(colType));
                     col.setSample("Integer".equals(col.getJavaType()) ? "11111111111" : "abc");
                     col.setTitle(toModuleTitle(colName, "_"));
-                    // col.setLength(meta.getPrecision(i));
+                    col.setLength(meta.getPrecision(i));
                     varName = toJavaName(colName, "_", true);
                     methodName = toJavaName(colName, "_", false);
                     col.setVarName(varName);

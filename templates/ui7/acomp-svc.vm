@@ -4,7 +4,7 @@ import { Client } from './client.service';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 #foreach ($col in $fkcols)
-import { ${col.methodName} } from '../model/${col.varName}';
+import { ${col.fkMethodName} } from '../model/${col.fkVarName}';
 #end
 
 import { ${className} } from '../model/${lowerName}';
@@ -25,7 +25,7 @@ export class ${className}Service {
         _id: '',
 #foreach ($col in $cols)
 #if($col.fk)
-        $col.varName: new ${col.methodName}(),
+        $col.varName: new ${col.fkMethodName}(),
 #else
         $col.varName: '',
 #end

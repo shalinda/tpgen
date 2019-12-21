@@ -5,17 +5,17 @@ import { ${className}Service }  from '../../service/${lowerName}.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { types } from 'util';
 #foreach ($col in $fkcols)
-import { ${col.methodName} } from '../../model/${col.lowerName}';
+import { ${col.fkMethodName} } from '../../model/${col.fkLowerName}';
 #end
 
 #foreach ($col in $fkcols)
-import { ${col.methodName}Service }  from '../../service/${col.lowerName}.service';
+import { ${col.fkMethodName}Service }  from '../../service/${col.fkLowerName}.service';
 #end
 
 @Component({
-  templateUrl: '${objectName}s.component.html',
-  selector: 'app-${objectName}s',
-  styleUrls: ['${objectName}s.component.scss']
+  templateUrl: '${lowerName}s.component.html',
+  selector: 'app-${lowerName}s',
+  styleUrls: ['${lowerName}s.component.scss']
 })
 
 export class ${className}sComponent implements OnInit {
@@ -30,7 +30,7 @@ export class ${className}sComponent implements OnInit {
   _alertType = '';
 
 #foreach ($col in $fkcols)
-  _${col.varName}s: ${col.methodName}[] = [];
+  _${col.varName}s: ${col.fkMethodName}[] = [];
 #end
 
   ${objectName}s: ${className}[] = [];
@@ -43,7 +43,7 @@ export class ${className}sComponent implements OnInit {
 
   constructor(private ${objectName}Service: ${className}Service
 #foreach ($col in $fkcols)
-    ,private ${col.varName}Service: ${col.methodName}Service
+    ,private ${col.varName}Service: ${col.fkMethodName}Service
 #end
 ) { }
 
@@ -70,9 +70,9 @@ export class ${className}sComponent implements OnInit {
 
 #foreach ($col in $fkcols)
   get${col.methodName}s(): void {
-    this.${col.varName}Service.get${col.methodName}s(null, null)
+    this.${col.varName}Service.get${col.fkMethodName}s(null, null)
       .subscribe((res: any) => {
-        this._${col.varName}s = res.${col.varName}s;
+        this._${col.varName}s = res.${col.fkVarName}s;
       }, err => {
         console.log(err);
       });
@@ -127,9 +127,9 @@ export class ${className}sComponent implements OnInit {
   update1(): void {
     const isUserValid = this.validateUser();
     if (isUserValid) {
-      const emp = { ...this._${objectName}Form.value, _id: this._selected${className}._id};
-      console.log('Updating ${className}..', emp);
-      this.${objectName}Service.update${className}(emp)
+      const obj = { ...this._${objectName}Form.value, _id: this._selected${className}._id};
+      console.log('Updating ${className}..', obj);
+      this.${objectName}Service.update${className}(obj)
         .subscribe(updatedEmp => {
           console.log('${className} Updated Successfully', updatedEmp);
           this.update${className}Array(updatedEmp);
@@ -157,13 +157,13 @@ export class ${className}sComponent implements OnInit {
 
   private update${className}Array(${objectName}: ${className}): void {
     this.${objectName}s = this.${objectName}s
-      .map(emp => (emp._id === ${objectName}._id) ? ${objectName} : emp);
+      .map(obj => (obj._id === ${objectName}._id) ? ${objectName} : obj);
   }
 
   private remove${className}FromArray(): void {
     const ${objectName} = this._selected${className};
     this.${objectName}s = this.${objectName}s
-      .filter(emp => emp._id !== ${objectName}._id);
+      .filter(obj => obj._id !== ${objectName}._id);
   }
 
   private validateUser(): boolean {

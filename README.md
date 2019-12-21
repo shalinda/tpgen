@@ -29,4 +29,7 @@ Sample templates
 	teamples/ui7
 
 
+ENV Variables
 
+TP_PROJECT_PATH - the environment variable where the project output exists
+TP_MODULE - the module generated

@@ -26,6 +26,8 @@ public class Column {
 
     private String lowerName;
 
+    private String fkLowerName;
+
     private String fkMethodName;
 
     private String fkKey;
@@ -48,6 +50,14 @@ public class Column {
 
     public void setLowerName(String lowerName) {
         this.lowerName = lowerName;
+    }
+
+    public String getFkLowerName() {
+        return fkLowerName;
+    }
+
+    public void setFkLowerName(String fkLowerName) {
+        this.fkLowerName = fkLowerName;
     }
 
     public String getFkVarName() {

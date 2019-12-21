@@ -9,7 +9,7 @@
  * @desc - module for get all ${objectName}.
  */
 module.exports.get${className}s = (req, res) => {
-  const itemPerPage = 5
+  const itemPerPage = 50
   const page = req.query.page || 1
   const data = JSON.parse(req.headers.data);
   const query = ${className}.find({"company": data.facNo});

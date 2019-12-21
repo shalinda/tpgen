@@ -24,7 +24,14 @@
               </div>
             </div>
           </div>          
-  #foreach ($col in $cols)
+          <div class="form-group row">
+#foreach ($col in $cols)            
+#if ($col.index == 0)
+            <div class="col-md-5">
+#elseif ($col.index == 6)
+            </div>
+            <div class="col-md-5">
+#end              
             <div class="form-group row">
               <label class="col-md-3 col-form-label" for="${col.varName}">${col.methodName}:</label>
               <div class="col-md-9">
@@ -37,6 +44,11 @@
                 <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                 <input type="text" [owlDateTime]="dt${col.varName}" [owlDateTimeTrigger]="dt${col.varName}" formControlName="${col.varName}" class="form-control" placeholder="Enter DateTime..">
                 <owl-date-time #dt${col.varName}></owl-date-time>
+#elseif (${col.mongoType}== 'Boolean')                  
+                    <label class="switch switch-3d switch-primary">
+                      <input type="checkbox" class="switch-input" formControlName="$col.varName" checked>
+                      <span class="switch-slider"></span>
+                    </label>
 #else
                 <input type="text" formControlName="${col.varName}" class="form-control" placeholder="Enter ${col.methodName}..">
 #end
@@ -49,7 +61,6 @@
 #end
             </div>
 #end
-
             <div class="row" style="float:right;margin-bottom: 20px;">
               <button [disabled]="_editMode" style="margin: 0 3px;" type="submit" class="btn btn-small btn-primary" (click)="save()">
                 <i class="fa fa-save" style="padding-right: 5px;"></i>Save
@@ -61,7 +72,8 @@
                 <i class="fa fa-trash" style="padding-right: 5px;"></i>Delete
               </button>              
             </div>
-          
+          </div>
+        </div>          
           </form>
         </div>
       </div>
@@ -76,7 +88,7 @@
         </div>
         <div class="card-body">
           <div>
-            <table class="table">
+            <table class="table table-striped">
               <thead>
                 <tr>
 #foreach ($col in $cols)                           
