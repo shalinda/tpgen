@@ -10,12 +10,12 @@
 // backend/routes/user.routes.js
 const ${objectName}Controller = require("../controllers/${lowerName}.controller");
 
-app.route("/api/v1/${objectName}s")
+app.route("/api/v1/${lowerName}s")
   .get(${objectName}Controller.get${className}s)
   .post(${objectName}Controller.create)
   .put(${objectName}Controller.update1);
 
-app.route("/api/v1/${objectName}s/:${objectName}Id")
+app.route("/api/v1/${lowerName}s/:${lowerName}Id")
   .get(${objectName}Controller.get${className}ById)  
   .delete(${objectName}Controller.delete);   
 
