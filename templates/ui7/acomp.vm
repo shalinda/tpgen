@@ -230,7 +230,11 @@ export class ${className}sComponent implements OnInit {
 
   getPagesAsArray() {
     if (this._pages > 0) {
-      return Array(this._pages).fill(1).map((x, y) => x + y);
+      var arr = Array(this._pages).fill(1).map((x, y) => x + y);
+      var pos = Math.floor((this._pages)-1) / 10)
+      return arr.slice(pos * 10, (pos + 1) * 10);
+
+      //return this.utilService.getPagesArray(this._pages[i], this._currentPage[i]);
     }
     return [];
   }
