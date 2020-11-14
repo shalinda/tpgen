@@ -52,8 +52,12 @@ export class ${className}Service {
     }
 
     get${className}s(pageNum: number, limit: number): Observable<{${objectName}s: any[], count: number, page: number, pages: number }> {      
-      const url = (pageNum) ? `${objectName}s?page=${pageNum}` : `${objectName}s`;
+      const url = (pageNum) ? `${lowerName}s?page=${pageNum}` : `${objectName}s`;
       return <Observable < { ${objectName}s: any[], count: number, page: number, pages: number }>>this.client.get(url);      
     }
     
+    get${className}sByParentId(pageNum: number, limit: number, parentId: String): Observable<{${objectName}s: any[], count: number, page: number, pages: number }> {      
+      const url = (pageNum) ? `${lowerName}sByParentId/${parentId}?page=${pageNum}` : `${objectName}s`;
+      return <Observable < { ${objectName}s: any[], count: number, page: number, pages: number }>>this.client.get(url);      
+    }
 }

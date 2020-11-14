@@ -1,0 +1,67 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-sm-12">
+      <app-page-header
+          [viewDetailBtnName]="viewDetailBtnName"
+          (viewDetail)="toggleHeader()"
+          (refresh)="refresh()">
+      </app-page-header>
+    </div>
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header" (click)="toggleHeader()">
+          <i class="fa fa-align-justify"></i>${readName}s
+        </div>
+        <tabset #tabset [hidden]="!showDetails">
+          <tab id="${lowerName}"
+            heading="${readName}"
+            (select)="selectTab($event)">
+            <div class="card-body">
+              <app-${lowerName}-detail></app-${lowerName}s-detail>
+            </div>
+          </tab>
+          <!--tab
+            id="routePoint"
+            heading="Route Point"
+            [disabled]="!is$ParentSelected()"
+            (select)="selectTab($event)">
+            <div class="card-body">
+              <app-route-point-detail
+                [route]="selectedParent}">
+            </app-route-point-detail>
+            </div>
+          </tab-->
+        </tabset>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div [hidden]="!isTabActive('${lowerName}')">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>View ${readName}
+          </div>
+          <div class="card-body">
+            <div>
+              <app-${lowerName}s-grid></app-${lowerName}s-grid>
+            </div>
+          </div>
+        </div>
+<div [hidden]="!isTabActive('movement')">
+          <!--div class="card-header">
+            <i class="fa fa-align-justify"></i>View Movements
+          </div>
+          <div class="card-body">
+            <div>
+              <app-movements-grid
+                [selectedSchedule]="selectedSchedule">
+              </app-movements-grid>
+            </div>
+          </div>
+        </div-->
+      </div>
+    </div>
+  </div>
+</div>

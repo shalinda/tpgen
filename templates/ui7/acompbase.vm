@@ -1,0 +1,79 @@
+/**
+ * @author : Shalinda Ranasinghe
+ * @copyright: 2020
+ */
+ 
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ${className} } from '../../model/${lowerName}';
+import { ${className}Service }  from '../../service/${lowerName}.service';
+import { ActionTransferService } from '../../service/action-transfer.service';
+import { RecordAction } from '../../model/record-action';
+import { ActionTypes } from '../../enums/action-types';
+//import { RoutePointActionTransferService } from '../../service/route-point-action-transfer.service';
+//import { RoutePointsService } from '../../service/routepoints.service';
+import { Subscription } from 'rxjs';
+import { TabsetComponent } from 'ngx-bootstrap/tabs';
+
+@Component({
+  templateUrl: '${lowerName}s.component.html',
+  selector: 'app-${lowerName}s',
+  styleUrls: ['${lowerName}s.component.scss']
+})
+
+export class ${className}sComponent implements OnInit, OnDestroy {
+  viewDetailBtnName = '${className}';
+  showDetails = false;
+  selected${className}: ${className};  
+  ${objectName}StateSubscription: Subscription;
+
+  @ViewChild('tabset', {static: true})
+  tabsSet: TabsetComponent;
+
+  constructor(private ${objectName}Service: ${className}Service,
+    private ${objectName}ActionTransferService: ActionTransferService
+//    private routePointsService: ${className}PointsService,
+//    private routePointActionTransferService: ${className}PointActionTransferService
+  ) { } 
+  
+  ngOnInit() {
+    this.${objectName}StateSubscription = this.${objectName}ActionTransferService.getAction().subscribe( action => {
+      this.performAction(action);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.${objectName}StateSubscription.unsubscribe();
+  }
+
+  performAction(action: RecordAction){
+    if(action.actionType == ActionTypes.SELECT 
+      || action.actionType == ActionTypes.DEFAULT){
+      this.selected${className} = action.record;  
+      this.showDetails = action.actionType == ActionTypes.SELECT;  
+    }
+  }
+
+  refresh(): void {
+    this.${objectName}ActionTransferService.setAction({actionType: ActionTypes.REFRESH})
+  }
+
+  toggleHeader(): void {
+    this.showDetails = !this.showDetails;
+  }
+
+  is${className}Selected(){
+    return (this.selected${className} ? (this.selected${className}._id != '') : false);
+  }
+
+//  selectTab(event){
+//    if(event.id == 'routePoint'){  
+//      const selectedRoutePoints = this.routePointsService.getDummyRoutePointsByRoute(this.selectedRoute) ;
+//      this.routePointActionTransferService.setAction({actionType: ActionTypes.TABSELECT, 
+//        record: selectedRoutePoints})
+//    }
+//  }
+
+  isTabActive(tabId){
+    return this.tabsSet.tabs.find(tab => tab.id == tabId).active;
+  }
+}

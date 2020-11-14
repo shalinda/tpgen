@@ -17,6 +17,11 @@ const ${className}Schema = new mongoose.Schema({
 
   },
 #end
+  company: {
+    type: String,
+    trim: false,
+    default: null
+  }  
 });
 
 // pre save method                                                                                                                                                                   

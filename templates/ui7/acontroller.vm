@@ -1,6 +1,6 @@
 /**
  * @author : Shalinda Ranasinghe
- * @copyright: 2019
+ * @copyright: 2020
  */
 
  const ${className} = require("../models/${lowerName}");
@@ -23,7 +23,7 @@ module.exports.get${className}s = (req, res) => {
     .limit(itemPerPage)
     .exec()
     .then(${objectName}s => {
-      ${className}.count()
+      query.count()
         .exec()
         .then(count => res.status(200)
           .json({
@@ -58,6 +58,35 @@ module.exports.get${className}ById = (req, res) => {
       .json(${objectName}))
     .catch(err => res.status(500)
       .json({ error: true, message: err.message }))
+}
+
+module.exports.get${className}ByParentId = (req, res) => {
+  const itemPerPage = 50
+  const page = req.query.page || 1
+  const data = JSON.parse(req.headers.data);
+  const parentId = req.params.parentId;
+  const query = ${className}.find({"parentId": parentId});
+  
+  query
+    .populate("parentId")
+    .lean()
+    .skip((itemPerPage * page) - itemPerPage)
+    .limit(itemPerPage)
+    .exec()
+    .then(${objectName}s => {
+      query.count()
+        .exec()
+        .then(count => res.status(200)
+          .json({
+            ${objectName}s,
+            count,
+            page,
+            pages: (count > 0) ? Math.ceil(count / itemPerPage) : 0 // TODO: handle math errors
+          }))
+        .catch(err => res.status(500)
+          .json({ message: err.message }))
+    })    
+
 }
 
 /**

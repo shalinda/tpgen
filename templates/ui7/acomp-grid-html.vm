@@ -1,0 +1,28 @@
+<table class="table table-striped">
+    <thead>
+      <tr>
+#foreach ($col in $cols)
+        <th>${col.title}</th>
+#end
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ${objectName} of ${objectName}s" 
+      [ngClass]="{'selected-tr': ${objectName}?._id === selected${className}?._id}" 
+      (click)="onSelectRecord(${objectName})">
+#foreach ($col in $cols)
+  #if (${col.mongoType}== 'Date')
+        <td>{{${objectName}.${col.varName}|date: 'dd/MM/yyyy hh:mm a'}}</td>
+  #else
+        <td>{{${objectName}.${col.varName}}}</td>
+  #end
+#end
+          </tr>
+    </tbody>
+  </table>
+  <app-pagination # ${objectName}Pagination 
+    [currentPage]="currentPage" 
+    [pages]="pages"
+    (pageChange)="onPageChange($event)">
+  </app-pagination> 
+

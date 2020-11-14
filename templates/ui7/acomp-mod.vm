@@ -4,6 +4,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ${className}sComponent } from './${lowerName}s.component';
 import { ${className}sRoutingModule } from './${lowerName}s-routing.module';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime'
+import { PumperSalesRoutingModule } from './pumpersales-routing.module';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 @NgModule({
   imports: [
@@ -12,6 +14,10 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime'
     ReactiveFormsModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
+    PageHeaderModule,
+    PaginationModule,
+    PumperSalesRoutingModule,
+    TabsModule,
     ${className}sRoutingModule
   ],
   declarations: [${className}sComponent],

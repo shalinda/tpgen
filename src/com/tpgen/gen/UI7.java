@@ -73,7 +73,6 @@ public class UI7 {
             this.tableName = tables1[0].substring(2);
         else
             this.tableName = tables1[0];
-
         this.table = tables1[0];
 
         this.isJs = isJs.equals("true");
@@ -117,6 +116,7 @@ public class UI7 {
         // context.put("constant", toConstantName(module, " "));
         context.put("className", className);
         context.put("objectName", objectName);
+        context.put("readName", toModuleTitle(tableName, "_"));
         context.put("lowerName", StringUtils.lowerCase(objectName));
         context.put("cols", cols);
         context.put("pk", cols.get(0));

@@ -5,6 +5,7 @@
 #if (${col.mongoType}== 'Number')1#end
 #if (${col.mongoType}== 'Boolean')true#end
 #if (${col.mongoType}== 'Date')"1/1/2018"#end,
+   "company": "0"
 #end}
 
 // backend/routes/user.routes.js
@@ -18,6 +19,9 @@ app.route("/api/v1/${lowerName}s")
 app.route("/api/v1/${lowerName}s/:${lowerName}Id")
   .get(${objectName}Controller.get${className}ById)  
   .delete(${objectName}Controller.delete);   
+
+app.route("/api/v1/${lowerName}sByParentId/:parentId")
+  .get(${objectName}Controller.get${className}ByParentId);  
 
 // front/src/app/app.routing.ts
   {
