@@ -20,7 +20,7 @@
           </tr>
     </tbody>
   </table>
-  <app-pagination # ${objectName}Pagination 
+  <app-pagination #${objectName}Pagination 
     [currentPage]="currentPage" 
     [pages]="pages"
     (pageChange)="onPageChange($event)">

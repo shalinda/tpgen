@@ -17,7 +17,7 @@
             heading="${readName}"
             (select)="selectTab($event)">
             <div class="card-body">
-              <app-${lowerName}-detail></app-${lowerName}s-detail>
+              <app-${lowerName}s-detail></app-${lowerName}s-detail>
             </div>
           </tab>
           <!--tab
