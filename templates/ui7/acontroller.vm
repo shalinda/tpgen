@@ -10,9 +10,9 @@
  */
 module.exports.get${className}s = (req, res) => {
   const itemPerPage = 50
-  const page = Number(req.query.page); 
+  const page = Number(req.query.page) || 1; 
   const data = JSON.parse(req.headers.data);
-  const query = ${className}.find("company" == 0 ? {} : {data.facNo});
+  const query = ${className}.find({"company" : data.facNo});
 
   if (page !== -1) {
     query
@@ -26,7 +26,7 @@ module.exports.get${className}s = (req, res) => {
     .lean()
     .exec()
     .then(${objectName}s => {
-      ${className}.count("company" == 0 ? {} : {data.facNo})
+      ${className}.count({"company" : data.facNo})
         .exec()
         .then(count => res.status(200)
           .json({
@@ -81,7 +81,7 @@ module.exports.get${className}ByParentId = (req, res) => {
     .lean()
     .exec()
     .then(${objectName}s => {
-      ${className}.count()
+      ${className}.count({"parentId": parentId})
         .exec()
         .then(count => res.status(200)
           .json({

@@ -1,0 +1,176 @@
+import { Component, OnInit, Input, ViewChild} from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { ActionTypes } from '../../../enums/action-types';
+import { RecordAction } from '../../../model/record-action';
+import { ${className} } from '../../../model/${lowerName}';
+//import { Parent } from '../../../model/Parent';
+import { ${className}ActionTransferService } from '../../../service/action/${lowerName}-action-transfer.service';
+import { ${className}Service } from '../../../service/${lowerName}.service';
+import { AlertMessageComponent } from '../../../shared/components/alert-message/alert-messgae.component';
+#foreach ($col in $fkcols)
+import { ${col.fkMethodName} } from '../../../model/${col.fkLowerName}';
+#end
+
+#foreach ($col in $fkcols)
+import { ${col.fkMethodName}Service }  from '../../../service/${col.fkLowerName}.service';
+#end
+
+@Component({
+  selector: 'app-${lowerName}s-detail', 
+  templateUrl: './${lowerName}s-detail.component.html',
+  styleUrls: ['./${lowerName}s-detail.component.scss']
+})
+
+export class ${className}sDetailComponent implements OnInit {
+  detailForm: FormGroup;
+  editMode = false;
+
+  selected${className}: ${className};
+  ${objectName}StateSubscription: Subscription;
+
+  @ViewChild(AlertMessageComponent, {static: false})
+  alertMessage: AlertMessageComponent;
+
+  @Input () parent: Parent;
+
+#foreach ($col in $fkcols)
+  ${col.varName}s: ${col.fkMethodName}[] = [];
+#end
+
+  constructor(private ${objectName}Service: ${className}Service
+#foreach ($col in $fkcols)
+    ,private ${col.varName}Service: ${col.fkMethodName}Service
+#end
+    ,private ${objectName}ActionTransferService: ${className}ActionTransferService
+    ) {}
+
+  ngOnInit() {
+    this.${objectName}StateSubscription = this.${objectName}ActionTransferService.getAction().subscribe( action => {
+      this.performAction(action);
+    });
+
+    this.selected${className} = this.${objectName}Service.getDummy${className}();
+#foreach ($col in $fkcols)
+    this.get${col.fkMethodName}();
+#end
+    this.initForm();
+    this.enableOrDisableEditMode();
+  }
+
+  ngOnDestroy(): void {
+    this.${objectName}StateSubscription.unsubscribe();
+  }
+
+  performAction(action: RecordAction){
+    if(action.actionType == ActionTypes.SELECT){
+      this.selected${className} = action.record;
+      this.initForm();
+      this.enableOrDisableEditMode();
+    }
+  }
+
+#foreach ($col in $fkcols)
+  get${col.fkMethodName}(): void {
+    this.${col.varName}Service.get${col.fkMethodName}s(null, null)
+      .subscribe((res: any) => {
+        this.${col.varName}s = res.${col.fkVarName}s;
+	console.log(this.${col.varName}s);      
+	}, err => {
+        console.log(err);
+      });
+  }
+#end
+
+  initForm(): void {
+    this.detailForm = new FormGroup({
+#foreach ($col in $cols)
+#if($col.fk)
+    ${col.varName}: new FormControl(this.selected${className}.${col.varName}._id, [Validators.required]),
+#else
+    ${col.varName}: new FormControl(this.selected${className}.${col.varName}, [Validators.required]),
+#end
+#end
+    });
+  }
+
+  private enableOrDisableEditMode(){
+    this.editMode =  this.selected${className}._id != "";
+  }
+
+  compareRole(val1, val2) {
+    return val1 === val2;
+  }
+
+  onSave(): void {
+    console.log(this.detailForm.value);
+    const isValid = this.validateFormData();
+    if (isValid) {
+      console.log('${className} valid');
+      const data = JSON.parse(localStorage.getItem('user_data'));
+      const obj = { ...this.detailForm.value, company: data.facNo.toString(), parentId: this.parent._id};
+      
+      this.${objectName}Service.add${className}(obj)
+        .subscribe((savedRecord) => {
+        this.resetForm();
+        console.log('${className} Saved: ', savedRecord);
+        this.alertMessage.msgAlert('header', 'Saved successfully', 'success');
+        this.${objectName}ActionTransferService.setAction({actionType: ActionTypes.SAVE});
+        }, err => {          
+          console.log('Error Saving ${className}');
+          this.alertMessage.msgAlert('header', 'Error saving', 'danger');
+        });
+    }
+  }
+
+  onUpdate() {
+    const isValid = this.validateFormData();
+    if (isValid) {
+      const obj = { ...this.detailForm.value, _id: this.selected${className}._id};
+      console.log('Updating ${className}..', obj);
+      this.${objectName}Service.update${className}(obj)
+        .subscribe(updatedRecord => {
+          console.log('${className} Updated Successfully', updatedRecord);
+          this.alertMessage.msgAlert('header', 'Saved successfully', 'success');
+          //this.update.emit({"updatedRecord": updatedRecord});
+          this.${objectName}ActionTransferService.setAction({actionType: ActionTypes.UPDATE, record: updatedRecord});
+        
+        }, err => {
+          console.log('Error Updating ${className}');
+          this.alertMessage.msgAlert('header', 'Error saving', 'danger');
+        });
+    }
+  }
+
+  onDelete() {
+    const ${objectName} = this.selected${className};
+    this.${objectName}Service.delete${className}(${objectName})
+      .subscribe(deletedRecord => {
+        console.log('${className} deleted');
+        this.resetForm();
+        this.alertMessage.msgAlert('header', 'Deleted successfully', 'success');
+        //this.delete.emit({'deletedRecord': deletedRecord});
+        this.${objectName}ActionTransferService.setAction({actionType: ActionTypes.DELETE, record: deletedRecord});
+
+      }, err => {
+        console.log('Error Deleting ${className}');
+        this.alertMessage.msgAlert('header', 'Error deleting', 'danger');
+      });
+  }
+
+  private validateFormData(): boolean {
+    const formDataValid = this.detailForm.valid;
+    if (!formDataValid) {
+      Object.keys(this.detailForm.controls)
+        .forEach(field => {
+          const control = this.detailForm.get(field);
+          control.markAsDirty({ onlySelf: true });
+        });
+    }
+    return formDataValid;
+  }
+
+  resetForm(): void {
+    this.detailForm.reset();
+  }
+}
