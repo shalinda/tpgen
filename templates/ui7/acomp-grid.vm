@@ -1,0 +1,127 @@
+import { Component, OnInit, Input, ViewChild, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ActionTypes } from '../../../enums/action-types';
+import { RecordAction } from '../../../model/record-action';
+import { ${className} } from '../../../model/${lowerName}';
+//import { Parent } from '../../../model/parent';
+import { ${className}ActionTransferService } from '../../../service/action/${lowerName}-action-transfer.service';
+import { ${className}Service } from '../../../service/${lowerName}.service';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+
+@Component({
+  selector: 'app-${lowerName}s-grid', 
+  templateUrl: './${lowerName}s-grid.component.html',
+  styleUrls: ['./${lowerName}s-grid.component.scss']
+})
+
+export class ${className}sGridComponent implements OnInit, OnDestroy {
+  
+  ${objectName}s: ${className}[] = [];
+  @Input()  selectedParent: Parent;
+  selected${className}: ${className};
+  ${objectName}StateSubscription: Subscription;
+
+  recordsCount = 1;
+  pages = 1;
+  currentPage = 1;
+
+  @ViewChild('${objectName}Pagination', {static: false})
+  ${objectName}Pagination: PaginationComponent;
+
+
+  constructor(private ${objectName}Service: ${className}Service, 
+	private ${objectName}ActionTransferService: ${className}ActionTransferService) { }
+
+  ngOnInit() {
+    this.${objectName}StateSubscription = this.${objectName}ActionTransferService.getAction().subscribe( action => {
+      this.performActions(action);
+    });
+    this.get${className}s();
+  }
+
+  ngOnDestroy(): void {
+    this.${objectName}StateSubscription.unsubscribe();
+  }
+
+  performActions(action: RecordAction){
+    switch(action.actionType){
+      case ActionTypes.SAVE:
+        this.get${className}s();
+        break;
+
+      case ActionTypes.UPDATE:
+        this.update${className}Array(action.record)
+        break;
+        
+      case ActionTypes.DELETE:
+        this.refreshGridWhenDeleteRecord(action.record);
+        break;
+
+      case ActionTypes.REFRESH:
+        this.currentPage = 1;
+        this.get${className}s();
+        break;
+      
+      case ActionTypes.TABSELECT:
+        this.selected${className} = action.record;
+        this.setSelected${className}(action.record, ActionTypes.SELECT);
+        this.get${className}s();
+    }
+  }
+
+  get${className}s(pageNum = 1, limit = 2): void {
+    pageNum = this.currentPage;
+    this.${objectName}Service.get${className}sByParentId(pageNum, limit, this.selectedParent._id)
+      .subscribe(res => {
+        if (res && res.${objectName}s) {
+          this.${objectName}s = res.${objectName}s;
+          try {
+            this.recordsCount = res.count;
+            this.currentPage = parseInt(res.page.toString(), 10);
+            this.pages = res.pages;
+          } catch (ex) {
+            console.log('Error Parsing pagination data');
+          }
+        }
+      });
+  }
+
+  onSelectRecord(record: any): void {
+    let ${objectName} = record;
+    if(this.selected${className} && this.selected${className}._id === ${objectName}._id){
+      ${objectName} = this.${objectName}Service.getDummy${className}();   
+    }
+    this.setSelected${className}(${objectName}, ActionTypes.SELECT);
+  }
+
+  onPageChange(event: any){
+    this.currentPage = event.currentPage
+    this.get${className}s(this.currentPage);
+  }
+
+  private update${className}Array(${objectName}: ${className}): void {
+    this.${objectName}s = this.${objectName}s
+      .map(obj => (obj._id === ${objectName}._id) ? ${objectName} : obj);
+  }
+
+  private remove${className}FromArray(${objectName}: ${className}): void {
+    this.${objectName}s = this.${objectName}s
+      .filter(obj => obj._id !== ${objectName}._id);
+  }
+
+  private refreshGridWhenDeleteRecord(deletedRecord){
+    this.remove${className}FromArray(deletedRecord);
+    this.get${className}s();
+    if (this.${objectName}s.length === 0 && this.currentPage > 1) {
+      this.${objectName}Pagination.prevPage()
+    }
+    this.setSelected${className}(this.${objectName}Service.getDummy${className}(), ActionTypes.SELECT);
+  }
+
+  private setSelected${className}(record, actionType?: string){
+    this.selected${className} = record;
+    this.${objectName}ActionTransferService.setAction({actionType: actionType, 
+      record : this.selected${className}});
+  }
+
+}

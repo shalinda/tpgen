@@ -3,15 +3,31 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ${className}sComponent } from './${objectName}s.component';
 import { ${className}sRoutingModule } from './${objectName}s-routing.module';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { PaginationModule } from '../../shared/components/pagination/pagination.module';
+import { PageHeaderModule } from '../../shared/components/page-header/page-header.module';
+import { ${className}sGridComponent } from './${lowerName}s-grid/${lowerName}s-grid.component';
+import { ${className}sDetailComponent } from './${lowerName}s-detail/${lowerName}s-detail.component';
+import { AlertMessageModule } from '../../shared/components/alert-message/alert-message.module';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime'
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    ${className}sRoutingModule
+    ${className}sRoutingModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
+    PageHeaderModule,
+    PaginationModule,
+    AlertMessageModule,
+    TabsModule,
   ],
-  declarations: [${className}sComponent],
+  declarations: [${className}sComponent,
+      ${className}sDetailComponent,
+      ${className}sGridComponent 
+    ],
   exports: [${className}sComponent]
 })
 export class ${className}sModule {}

@@ -1,0 +1,23 @@
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { RecordAction } from '../../model/record-action';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ${className}ActionTransferService {
+
+  private actionSource: BehaviorSubject<RecordAction>
+
+  constructor() {
+    this.actionSource = new BehaviorSubject<RecordAction>(new RecordAction());
+  }
+
+  getAction() {
+    return this.actionSource.asObservable();
+  }
+
+  setAction(action: RecordAction) {
+    this.actionSource.next(action);
+  }
+}
