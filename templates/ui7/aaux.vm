@@ -1,3 +1,7 @@
+parent=${parentObjectName}
+parentId=${parentId}
+
+// postman
 {
 #foreach ($col in $cols)  
   "$col.varName":#if (${col.mongoType}== 'String')"test1"#end

@@ -67,7 +67,18 @@ public class UI7 {
 
     public UI7(String app, String table, String db, String templates, String pkg, String dir1, String isJs)
             throws Exception {
-        String[] tables1 = table.split("->"); /// fk
+        String[] table2 = table.split("\\("); /// parent
+        boolean hasParent = table2.length > 1;
+        String parentId = ""; String parentTable = ""; String parentClassName = ""; String parentObjectName = "";
+        if (hasParent) {
+            String[] parent = table2[1].replace(")", "").split(","); // parent id, table
+            parentId = parent[0];
+            parentTable = parent[1];
+            parentClassName = toJavaName(parentTable, "_", false);
+            parentObjectName = StringUtils.uncapitalize(parentClassName);
+        }
+
+        String[] tables1 = table2[0].split("->"); /// fk
         String[] tempTable = tables1[0].split("_");
         if (tempTable[0].length() == 1)
             this.tableName = tables1[0].substring(2);
@@ -115,8 +126,19 @@ public class UI7 {
         context.put("table", tableName);
         context.put("package", pkg);
         // context.put("constant", toConstantName(module, " "));
+        // parent
+        if (hasParent) {
+            context.put("parentId", parentId);
+            context.put("parentClassName", parentClassName);
+            context.put("parentObjectName", parentObjectName);
+            context.put("parentReadName", toModuleTitle(parentTable, "_"));
+            context.put("parentObjectName", StringUtils.lowerCase(parentObjectName));
+        }
         context.put("className", className);
         context.put("objectName", objectName);
+        context.put("readName", toModuleTitle(parentTable, "_"));
+        context.put("lowerName", StringUtils.lowerCase(objectName));
+
         context.put("cols", cols);
         context.put("pk", cols.get(0));
         context.put("fkcols", fkcols);
