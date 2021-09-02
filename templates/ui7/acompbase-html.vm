@@ -21,13 +21,13 @@
             </div>
           </tab>
           <!--tab
-            id="routePoint"
-            heading="Route Point"
-            [disabled]="!is$ParentSelected()"
+            id="child objectName"
+            heading="child readName"
+            [disabled]="!is${className}Selected()"
             (select)="selectTab($event)">
             <div class="card-body">
-              <app-route-point-detail
-                [route]="selectedParent}">
+              <app-route-point-detail 
+                [parent]="selected${className}}">
             </app-route-point-detail>
             </div>
           </tab-->
@@ -49,14 +49,14 @@
             </div>
           </div>
         </div>
-<!--div [hidden]="!isTabActive('movement')">
+<!--div [hidden]="!isTabActive('child objectName')">
           <div class="card-header">
             <i class="fa fa-align-justify"></i>View Movements
           </div>
           <div class="card-body">
             <div>
-              <app-movements-grid
-                [selectedSchedule]="selectedSchedule">
+              <app-movements-grid  
+                [selectedParent]="selected${className}}">
               </app-movements-grid>
             </div>
           </div>

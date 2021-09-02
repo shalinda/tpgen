@@ -20,9 +20,11 @@ export class ${className}Service {
 
   constructor(private client: Client) { }
 
-    getDummy${className}(): ${className} {
+    getDummy${className}()//${parentObjectName} : ${parentClassName}
+    :${className}{
       return {
         _id: '',
+        //${parentId} : ${parentObjectName}
 #foreach ($col in $cols)
 #if($col.fk)
         $col.varName: new ${col.methodName}(),

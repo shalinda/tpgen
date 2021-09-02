@@ -68,7 +68,7 @@ module.exports.get${className}ByParentId = (req, res) => {
   const page = req.query.page || 1
   const data = JSON.parse(req.headers.data);
   const parentId = req.params.parentId;
-  const query = ${className}.find({"parentId": parentId});
+  const query = ${className}.find({"${parentId}": parentId});
 
   if (page !== -1) {
     query
@@ -77,11 +77,11 @@ module.exports.get${className}ByParentId = (req, res) => {
   }
   
   query
-    .populate("parentId")
+    .populate("${parentId}")
     .lean()
     .exec()
     .then(${objectName}s => {
-      ${className}.count({"parentId": parentId})
+      ${className}.count({"${parentId}": parentId})
         .exec()
         .then(count => res.status(200)
           .json({
@@ -96,7 +96,7 @@ module.exports.get${className}ByParentId = (req, res) => {
 }
 
 
-**
+/**
  * @desc - module for save ${objectName}
  */
 module.exports.create = (req, res) => {
