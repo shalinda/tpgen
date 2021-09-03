@@ -10,7 +10,7 @@
     <div class="col-sm-12">
       <div class="card">
         <div class="card-header" (click)="toggleHeader()">
-          <i class="fa fa-align-justify"></i>${readName}s
+          <i class="fa fa-align-justify"></i>${className}s
         </div>
         <tabset #tabset [hidden]="!showDetails">
           <tab id="${lowerName}"
@@ -41,7 +41,7 @@
       <div class="card">
         <div [hidden]="!isTabActive('${lowerName}')">
           <div class="card-header">
-            <i class="fa fa-align-justify"></i>View ${readName}
+            <i class="fa fa-align-justify"></i>View ${className}
           </div>
           <div class="card-body">
             <div>

@@ -1,8 +1,4 @@
-parent=${parentObjectName}
-parentId=${parentId}
-
-
-
+hello#if(${parentId})(${parentObjectName},${parentId})#end
 // postman
 {
 #foreach ($col in $cols)  

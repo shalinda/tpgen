@@ -1,0 +1,92 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-sm-12">
+      <app-page-header
+          [viewDetailBtnName]="viewDetailBtnName"
+          (viewDetail)="toggleHeader()"
+          (refresh)="refresh()">
+      </app-page-header>
+    </div>
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header" (click)="toggleHeader()">
+          <i class="fa fa-align-justify"></i>${className}
+        </div>
+        <tabset [hidden]="!showDetails">
+          <tab id="route"
+            heading="${className}"
+            (select)="selectTab($event)">
+            <div class="card-body">
+              <app-${lowerName}s-detail}
+                [selectedRecord]="selected${className}"
+                (save)="saveRoute($event)"
+                (update)="updateRoute($event)"
+                (delete)="deleteRoute($event)">
+              </app-${lowerName}s-detail>
+            </div>
+          </tab>
+          <tab
+            id="routePoint"
+            heading="Route Point"
+            [disabled]="isRouteNotSelected()"
+            (select)="selectTab($event)">
+            <div class="card-body">
+              <app-route-point-detail
+                [selectedRecord]="selectedRoutePoints"
+                [routeId]="selectedRoute"
+                (save)="saveRoutePoint($event)"
+                (update)="updateRoutePoint($event)"
+                (delete)="deleteRoutePoint($event)">
+            </app-route-point-detail>
+            </div>
+          </tab>
+        </tabset>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card"  *ngIf="!isRoutPointTabSelected; else routePointsGrid">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>View Route
+        </div>
+        <div class="card-body">
+          <div>
+            <app-${lowerName}s-grid
+              [dataRecords]="routes"
+              [selectedRecord]="selected${className}"
+              (selectRecord)="select${className}($event)">
+            </app-${lowerName}s-grid>
+            <app-pagination #${lowerName}Pagination
+              [currentPage]="${lowerName}CurrentPage"
+              [pages]="${lowerName}Pages"
+              (pageChange)="on${className}PageChange($event)">
+            </app-pagination>          
+          </div>
+        </div>
+      </div>
+      <ng-template #routePointsGrid>
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>View Route Points
+          </div>
+          <div class="card-body">
+            <div>
+              <app-route-point-grid
+                [dataRecords]="routePoints"
+                [selectedRecord]="selectedRoutePoints"
+                (selectRecord)="selectRoutePoints($event)">
+              </app-route-point-grid>          
+              <app-pagination #routePointPagination
+                [currentPage]="routePointCurrentPage"
+                [pages]="routePointPages"
+                (pageChange)="onRoutePointsPageChange($event)">
+              </app-pagination>   
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

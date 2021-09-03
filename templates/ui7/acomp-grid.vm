@@ -17,7 +17,9 @@ import { PaginationComponent } from '../../../shared/components/pagination/pagin
 export class ${className}sGridComponent implements OnInit, OnDestroy {
   
   ${objectName}s: ${className}[] = [];
-  //@Input()  selectedParent: ${parentClassName};
+
+  #if(${parentId})@Input()  selectedParent: ${parentClassName};#end
+
   selected${className}: ${className};
   ${objectName}StateSubscription: Subscription;
 
@@ -71,8 +73,9 @@ export class ${className}sGridComponent implements OnInit, OnDestroy {
 
   get${className}s(pageNum = 1, limit = 2): void {
     pageNum = this.currentPage;
-    if(this.selectedParent==null) return;
-    this.${objectName}Service.get${className}sByParentId(pageNum, limit, this.selectedParent._id)
+    #if(${parentId})if(this.selectedParent==null) return;#end
+    
+    this.${objectName}Service.get${className}s#if(${parentId})ByParentId#end(pageNum, limit#if(${parentId}), this.selectedParent._id#end)
       .subscribe(res => {
         if (res && res.${objectName}s) {
           this.${objectName}s = res.${objectName}s;
@@ -90,7 +93,7 @@ export class ${className}sGridComponent implements OnInit, OnDestroy {
   onSelectRecord(record: any): void {
     let ${objectName} = record;
     if(this.selected${className} && this.selected${className}._id === ${objectName}._id){
-      ${objectName} = this.${objectName}Service.getDummy${className}();//(this.selectedParent)   
+      ${objectName} = this.${objectName}Service.getDummy${className}(#if(${parentId})this.selectedParent#end)   
     }
     this.setSelected${className}(${objectName}, ActionTypes.SELECT);
   }
@@ -116,7 +119,7 @@ export class ${className}sGridComponent implements OnInit, OnDestroy {
     if (this.${objectName}s.length === 0 && this.currentPage > 1) {
       this.${objectName}Pagination.prevPage()
     }
-    this.setSelected${className}(this.${objectName}Service.getDummy${className}(), ActionTypes.SELECT);  //(this.selectedParent)
+    this.setSelected${className}(this.${objectName}Service.getDummy${className}(#if(${parentId})this.selectedParent#end), ActionTypes.SELECT);  
   }
 
   private setSelected${className}(record, actionType?: string){

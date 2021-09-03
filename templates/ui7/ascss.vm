@@ -1,0 +1,23 @@
+tr {
+    cursor: pointer;
+  }
+
+.error-msg {
+  color: red;
+}
+
+.selected-tr {
+  background-color: #eff9fc !important;
+}
+.card-body {
+  padding-bottom: 0;
+}
+
+.table th,
+.table td {
+  padding: 0.5rem;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
