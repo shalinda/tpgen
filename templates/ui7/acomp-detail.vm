@@ -5,7 +5,7 @@ import { ActionTypes } from '../../../enums/action-types';
 import { RecordAction } from '../../../model/record-action';
 import { ${className} } from '../../../model/${lowerName}';
 //import { Parent } from '../../../model/Parent';
-import { ${className}ActionTransferService } from '../../../service/action/${lowerName}-action-transfer.service';
+import { ActionTransferService } from '../../../service/action/action-transfer.service';
 import { ${className}Service } from '../../../service/${lowerName}.service';
 import { AlertMessageComponent } from '../../../shared/components/alert-message/alert-messgae.component';
 #foreach ($col in $fkcols)
@@ -43,7 +43,7 @@ export class ${className}sDetailComponent implements OnInit {
 #foreach ($col in $fkcols)
     ,private ${col.varName}Service: ${col.fkMethodName}Service
 #end
-    ,private ${objectName}ActionTransferService: ${className}ActionTransferService
+    ,private ${objectName}ActionTransferService: ActionTransferService
     ) {}
 
   ngOnInit() {

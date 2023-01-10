@@ -4,7 +4,7 @@ import { ActionTypes } from '../../../enums/action-types';
 import { RecordAction } from '../../../model/record-action';
 import { ${className} } from '../../../model/${lowerName}';
 //import { Parent } from '../../../model/parent';
-import { ${className}ActionTransferService } from '../../../service/action/${lowerName}-action-transfer.service';
+import { ActionTransferService } from '../../../service/action/action-transfer.service';
 import { ${className}Service } from '../../../service/${lowerName}.service';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 
@@ -32,7 +32,7 @@ export class ${className}sGridComponent implements OnInit, OnDestroy {
 
 
   constructor(private ${objectName}Service: ${className}Service, 
-	private ${objectName}ActionTransferService: ${className}ActionTransferService) { }
+	private ${objectName}ActionTransferService: ActionTransferService) { }
 
   ngOnInit() {
     this.${objectName}StateSubscription = this.${objectName}ActionTransferService.getAction().subscribe( action => {

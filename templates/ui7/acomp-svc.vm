@@ -21,7 +21,7 @@ export class ${className}Service {
   constructor(private client: Client) { }
 
 
-    getDummy${className}#if(${parentId})(${parentObjectName} : ${parentClassName})#end:${className}{
+    getDummy${className}#if(${parentId})(${parentObjectName}() : ${parentClassName})#end:${className}{
       return {
         _id: '',
 
