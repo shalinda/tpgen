@@ -5,7 +5,7 @@ import { ActionTypes } from '../../../enums/action-types';
 import { RecordAction } from '../../../model/record-action';
 import { ${className} } from '../../../model/${lowerName}';
 //import { Parent } from '../../../model/Parent';
-import { ${className}ActionTransferService } from '../../../service/action/${lowerName}-action-transfer.service';
+import { ActionTransferService } from '../../../service/action/action-transfer.service';
 import { ${className}Service } from '../../../service/${lowerName}.service';
 import { AlertMessageComponent } from '../../../shared/components/alert-message/alert-messgae.component';
 #foreach ($col in $fkcols)
@@ -32,7 +32,8 @@ export class ${className}sDetailComponent implements OnInit {
   @ViewChild(AlertMessageComponent, {static: false})
   alertMessage: AlertMessageComponent;
 
-  @Input () parent: Parent;
+  #if(${parentId})@Input () parent: ${parentClassName};#end
+ 
 
 #foreach ($col in $fkcols)
   ${col.varName}s: ${col.fkMethodName}[] = [];
@@ -42,7 +43,7 @@ export class ${className}sDetailComponent implements OnInit {
 #foreach ($col in $fkcols)
     ,private ${col.varName}Service: ${col.fkMethodName}Service
 #end
-    ,private ${objectName}ActionTransferService: ${className}ActionTransferService
+    ,private ${objectName}ActionTransferService: ActionTransferService
     ) {}
 
   ngOnInit() {
@@ -50,7 +51,7 @@ export class ${className}sDetailComponent implements OnInit {
       this.performAction(action);
     });
 
-    this.selected${className} = this.${objectName}Service.getDummy${className}();
+    this.selected${className} = this.${objectName}Service.getDummy${className}(#if(${parentId})this.parent#end);
 #foreach ($col in $fkcols)
     this.get${col.fkMethodName}();
 #end
@@ -108,7 +109,7 @@ export class ${className}sDetailComponent implements OnInit {
     if (isValid) {
       console.log('${className} valid');
       const data = JSON.parse(localStorage.getItem('user_data'));
-      const obj = { ...this.detailForm.value, company: data.facNo.toString(), parentId: this.parent._id};
+      const obj = { ...this.detailForm.value, company: data.facNo.toString()#if(${parentId}), ${parentId}: this.parent._id#end};
       
       this.${objectName}Service.add${className}(obj)
         .subscribe((savedRecord) => {
