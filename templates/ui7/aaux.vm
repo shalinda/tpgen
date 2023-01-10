@@ -8,6 +8,21 @@ hello#if(${parentId})(${parentObjectName},${parentId})#end
 #if (${col.mongoType}== 'Date')"1/1/2018"#end,
 #end}
 
+#foreach ($col in $cols)
+  <field name="$col.varName" #if (${col.mongoType}== 'String')class="java.lang.String"/>#end#if (${col.mongoType}== 'Number')class="java.lang.Double"/>#end#if (${col.mongoType}== 'Date')class="java.util.Date"/>#end
+
+#end
+
+cd gen1
+//set target path
+export TGT=/front/src/app/views
+mkdir -p $TGT/${objectName}s/${objectName}s-detail
+mkdir $TGT/${objectName}s/${objectName}s-grid
+move ${objectName}s-routing.module.ts $TGT/${objectName}s
+move ${objectName}s.* $TGT/${objectName}s
+move ${objectName}s-detail.component.* $TGT/${objectName}s/${objectName}s-detail
+move ${objectName}s-grid.component.* $TGT/${objectName}s/${objectName}s-grid
+
 const ${objectName}Controller = require("../controllers/${objectName}.controller");
 
 app.route("/api/v1/${objectName}s")

@@ -4,7 +4,7 @@ import { ActionTypes } from '../../../enums/action-types';
 import { RecordAction } from '../../../model/record-action';
 import { ${className} } from '../../../model/${lowerName}';
 //import { Parent } from '../../../model/parent';
-import { ${className}ActionTransferService } from '../../../service/action/${lowerName}-action-transfer.service';
+import { ActionTransferService } from '../../../service/action/action-transfer.service';
 import { ${className}Service } from '../../../service/${lowerName}.service';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 
@@ -17,7 +17,9 @@ import { PaginationComponent } from '../../../shared/components/pagination/pagin
 export class ${className}sGridComponent implements OnInit, OnDestroy {
   
   ${objectName}s: ${className}[] = [];
-  @Input()  selectedParent: Parent;
+
+  #if(${parentId})@Input()  selectedParent: ${parentClassName};#end
+
   selected${className}: ${className};
   ${objectName}StateSubscription: Subscription;
 
@@ -30,7 +32,7 @@ export class ${className}sGridComponent implements OnInit, OnDestroy {
 
 
   constructor(private ${objectName}Service: ${className}Service, 
-	private ${objectName}ActionTransferService: ${className}ActionTransferService) { }
+	private ${objectName}ActionTransferService: ActionTransferService) { }
 
   ngOnInit() {
     this.${objectName}StateSubscription = this.${objectName}ActionTransferService.getAction().subscribe( action => {
@@ -71,7 +73,9 @@ export class ${className}sGridComponent implements OnInit, OnDestroy {
 
   get${className}s(pageNum = 1, limit = 2): void {
     pageNum = this.currentPage;
-    this.${objectName}Service.get${className}sByParentId(pageNum, limit, this.selectedParent._id)
+    #if(${parentId})if(this.selectedParent==null) return;#end
+    
+    this.${objectName}Service.get${className}s#if(${parentId})ByParentId#end(pageNum, limit#if(${parentId}), this.selectedParent._id#end)
       .subscribe(res => {
         if (res && res.${objectName}s) {
           this.${objectName}s = res.${objectName}s;
@@ -89,7 +93,7 @@ export class ${className}sGridComponent implements OnInit, OnDestroy {
   onSelectRecord(record: any): void {
     let ${objectName} = record;
     if(this.selected${className} && this.selected${className}._id === ${objectName}._id){
-      ${objectName} = this.${objectName}Service.getDummy${className}();   
+      ${objectName} = this.${objectName}Service.getDummy${className}(#if(${parentId})this.selectedParent#end)   
     }
     this.setSelected${className}(${objectName}, ActionTypes.SELECT);
   }
@@ -115,7 +119,7 @@ export class ${className}sGridComponent implements OnInit, OnDestroy {
     if (this.${objectName}s.length === 0 && this.currentPage > 1) {
       this.${objectName}Pagination.prevPage()
     }
-    this.setSelected${className}(this.${objectName}Service.getDummy${className}(), ActionTypes.SELECT);
+    this.setSelected${className}(this.${objectName}Service.getDummy${className}(#if(${parentId})this.selectedParent#end), ActionTypes.SELECT);  
   }
 
   private setSelected${className}(record, actionType?: string){

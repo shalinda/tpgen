@@ -49,7 +49,11 @@
               <button [disabled]="!editMode" style="margin: 0 3px;" type="button" class="btn btn-small btn-primary" 
 		(click)="onDelete()">
                 <i class="fa fa-trash" style="padding-right: 5px;"></i>Delete
-              </button>              
+              </button>
+              <button  style="margin: 0 3px;" type="button" class="btn btn-small btn-primary" 
+              (click)="resetForm()">
+                          <i class="fa" style="padding-right: 5px;"></i>Clear
+                        </button>                 
             </div>
           </div>
         </div>          

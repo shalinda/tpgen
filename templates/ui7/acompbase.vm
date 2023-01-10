@@ -6,7 +6,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ${className} } from '../../model/${lowerName}';
 import { ${className}Service }  from '../../service/${lowerName}.service';
-import { ${className}ActionTransferService } from '../../service/action/${lowerName}-action-transfer.service';
+import { ActionTransferService } from '../../service/action/action-transfer.service';
 import { RecordAction } from '../../model/record-action';
 import { ActionTypes } from '../../enums/action-types';
 //import { RoutePointActionTransferService } from '../../service/route-point-action-transfer.service';
@@ -30,7 +30,7 @@ export class ${className}sComponent implements OnInit, OnDestroy {
   tabsSet: TabsetComponent;
 
   constructor(private ${objectName}Service: ${className}Service,
-    private ${objectName}ActionTransferService: ${className}ActionTransferService
+    private ${objectName}ActionTransferService: ActionTransferService
 //    private routePointsService: ${className}PointsService,
 //    private routePointActionTransferService: ${className}PointActionTransferService
   ) { } 
@@ -65,13 +65,13 @@ export class ${className}sComponent implements OnInit, OnDestroy {
     return (this.selected${className} ? (this.selected${className}._id != '') : false);
   }
 
-//  selectTab(event){
-//    if(event.id == 'routePoint'){  
-//      const selectedRoutePoints = this.routePointsService.getDummyRoutePointsByRoute(this.selectedRoute) ;
-//      this.routePointActionTransferService.setAction({actionType: ActionTypes.TABSELECT, 
-//        record: selectedRoutePoints})
-//    }
-//  }
+  selectTab(event){
+    if(event.id == '${objectName}'){  
+      const selected = this.${objectName}Service.getDummy${className}() ;
+      this.${objectName}ActionTransferService.setAction({actionType: ActionTypes.TABSELECT, 
+        record: selected})
+    }
+  }
 
   isTabActive(tabId){
     return this.tabsSet.tabs.find(tab => tab.id == tabId).active;

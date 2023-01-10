@@ -20,13 +20,21 @@ export class ${className}Service {
 
   constructor(private client: Client) { }
 
-    getDummy${className}(): ${className} {
+
+    getDummy${className}#if(${parentId})(${parentObjectName}() : ${parentClassName})#end:${className}{
       return {
         _id: '',
+
+#if(${parentId})
+        //${parentId} : ${parentObjectName},
+#end
 #foreach ($col in $cols)
 #if($col.fk)
         $col.varName: new ${col.methodName}(),
-#else
+        
+#elseif($col.parentId)
+        ${parentId} : ${parentObjectName},
+#else        
         $col.varName: '',
 #end
 #end
