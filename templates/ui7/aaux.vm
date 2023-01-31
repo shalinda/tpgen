@@ -18,10 +18,11 @@ cd gen1
 export TGT=/front/src/app/views
 mkdir -p $TGT/${objectName}s/${objectName}s-detail
 mkdir $TGT/${objectName}s/${objectName}s-grid
-move ${objectName}s-routing.module.ts $TGT/${objectName}s
-move ${objectName}s.* $TGT/${objectName}s
-move ${objectName}s-detail.component.* $TGT/${objectName}s/${objectName}s-detail
-move ${objectName}s-grid.component.* $TGT/${objectName}s/${objectName}s-grid
+cd views
+cp ${objectName}s-routing.module.ts $TGT/${objectName}s
+cp ${objectName}s.* $TGT/${objectName}s
+cp ${objectName}s-detail.component.* $TGT/${objectName}s/${objectName}s-detail
+cp ${objectName}s-grid.component.* $TGT/${objectName}s/${objectName}s-grid
 
 const ${objectName}Controller = require("../controllers/${objectName}.controller");
 
