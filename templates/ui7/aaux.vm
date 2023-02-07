@@ -16,22 +16,22 @@ hello#if(${parentId})(${parentObjectName},${parentId})#end
 cd gen1
 //set target path
 export TGT=/front/src/app/views
-mkdir -p $TGT/${objectName}s/${objectName}s-detail
-mkdir $TGT/${objectName}s/${objectName}s-grid
+mkdir -p $TGT/${lowerName}s/${objectlowerNameName}s-detail
+mkdir $TGT/${lowerName}s/${lowerName}s-grid
 cd views
-cp ${objectName}s-routing.module.ts $TGT/${objectName}s
-cp ${objectName}s.* $TGT/${objectName}s
-cp ${objectName}s-detail.component.* $TGT/${objectName}s/${objectName}s-detail
-cp ${objectName}s-grid.component.* $TGT/${objectName}s/${objectName}s-grid
+cp ${lowerName}s-routing.module.ts $TGT/${lowerName}s
+cp ${lowerName}s.* $TGT/${lowerName}s
+cp ${lowerName}s-detail.component.* $TGT/${lowerName}s/${lowerName}s-detail
+cp ${lowerName}s-grid.component.* $TGT/${lowerName}s/${lowerName}s-grid
 
-const ${objectName}Controller = require("../controllers/${objectName}.controller");
+const ${lowerName}Controller = require("../controllers/${lowerName}.controller");
 
-app.route("/api/v1/${objectName}s")
-  .get(${objectName}Controller.get${className}s)
-  .post(${objectName}Controller.create)
-  .put(${objectName}Controller.update1);
+app.route("/api/v1/${lowerName}s")
+  .get(${lowerName}Controller.get${className}s)
+  .post(${lowerName}Controller.create)
+  .put(${lowerName}Controller.update1);
 
-app.route("/api/v1/${objectName}s/:${objectName}Id")
-  .get(${objectName}Controller.get${className}ById)  
-  .delete(${objectName}Controller.delete);   
+app.route("/api/v1/${lowerName}s/:${lowerName}Id")
+  .get(${lowerName}Controller.get${className}ById)  
+  .delete(${lowerName}Controller.delete);   
 
