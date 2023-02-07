@@ -15,7 +15,7 @@ hello#if(${parentId})(${parentObjectName},${parentId})#end
 
 cd gen1
 //set target path
-export TGT=/front/src/app/views
+export TGT=/home/shalinda/Development/dev3/angular6/school1/school/front/src/app/views
 mkdir -p $TGT/${lowerName}s/${lowerName}s-detail
 mkdir $TGT/${lowerName}s/${lowerName}s-grid
 cd views
