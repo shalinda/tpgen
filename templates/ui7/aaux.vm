@@ -16,7 +16,7 @@ hello#if(${parentId})(${parentObjectName},${parentId})#end
 cd gen1
 //set target path
 export TGT=/front/src/app/views
-mkdir -p $TGT/${lowerName}s/${objectlowerNameName}s-detail
+mkdir -p $TGT/${lowerName}s/${lowerName}s-detail
 mkdir $TGT/${lowerName}s/${lowerName}s-grid
 cd views
 cp ${lowerName}s-routing.module.ts $TGT/${lowerName}s
